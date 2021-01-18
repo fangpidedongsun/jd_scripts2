@@ -1,6 +1,6 @@
 /*
- * @Author: lxk0301 https://github.com/lxk0301 
- * @Date: 2020-08-19 16:12:40 
+ * @Author: lxk0301 https://github.com/lxk0301
+ * @Date: 2020-08-19 16:12:40
  * @Last Modified by: lxk0301
  * @Last Modified time: 2021-1-7 17:52:54
  */
@@ -49,7 +49,7 @@ let DD_BOT_SECRET = '';
 let QYWX_KEY = '';
 
 // =======================================企业微信应用消息通知设置区域===========================================
-//此处填你企业微信应用消息的 值(详见文档 https://work.weixin.qq.com/api/doc/90000/90135/90236)，依次填上corpid的值,corpsecret的值,touser的值,agentid的值，素材库图片id（见https://github.com/lxk0301/jd_scripts/issues/519) 注意用,号隔开，例如：wwcff56746d9adwers,B-791548lnzXBE6_BWfxdf3kSTMJr9vFEPKAbh6WERQ,mingcheng,1000001,2COXgjH2UIfERF2zxrtUOKgQ9XklUqMdGSWLBoW_lSDAdafat
+//此处填你企业微信应用消息的 值(详见文档 https://work.weixin.qq.com/api/doc/90000/90135/90236)，依次填上corpid的值,corpsecret的值,touser的值,agentid的值，素材库图片id（见https://github.com/fangpidedongsun/jd_scripts2/issues/519) 注意用,号隔开，例如：wwcff56746d9adwers,B-791548lnzXBE6_BWfxdf3kSTMJr9vFEPKAbh6WERQ,mingcheng,1000001,2COXgjH2UIfERF2zxrtUOKgQ9XklUqMdGSWLBoW_lSDAdafat
 //增加一个选择推送消息类型，用图文消息直接填写素材库图片id的值，用卡片消息就填写0(就是数字零)
 //注：此处设置github action用户填写到Settings-Secrets里面(Name输入QYWX_AM)
 let QYWX_AM = '';
@@ -466,7 +466,7 @@ function qywxamNotify(text, desp) {
         },
       };
     $.post(options_accesstoken, (err, resp, data) => {
-      html=desp.replace(/\n/g,"<br/>")    
+      html=desp.replace(/\n/g,"<br/>")
       var json = JSON.parse(data);
       accesstoken = json.access_token;
       const options_textcard = {
@@ -497,10 +497,10 @@ function qywxamNotify(text, desp) {
                   articles: [
                   {
             title: `${text}`,
-                  thumb_media_id: `${QYWX_AM_AY[4]}`,  
+                  thumb_media_id: `${QYWX_AM_AY[4]}`,
                   author : `智能助手` ,
                   content_source_url: ``,
-                  content : `${html}`, 
+                  content : `${html}`,
                   digest: `${desp}`
                   }
                   ]
@@ -546,7 +546,7 @@ function iGotNotify(text, desp, params={}){
       if(!IGOT_PUSH_KEY_REGX.test(IGOT_PUSH_KEY)) {
         console.log('您所提供的IGOT_PUSH_KEY无效\n')
         resolve()
-        return 
+        return
       }
       const options = {
         url: `https://push.hellyw.com/${IGOT_PUSH_KEY.toLowerCase()}`,
