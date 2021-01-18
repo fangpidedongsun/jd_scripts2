@@ -4,14 +4,14 @@
 
 | Name                    |   归属   | 属性   | 说明                                                         |
 | :---------------------: | :----------: | --------- | ------------------------------------------------------------ |
-| `JD_COOKIE`             |   京东   | 必须   | 京东cookie,多个账号的cookie使用`&`隔开或者换行。具体获取参考[浏览器获取京东cookie教程](https://github.com/lxk0301/jd_scripts/blob/master/backUp/GetJdCookie.md) 或者 [插件获取京东cookie教程](https://github.com/lxk0301/jd_scripts/blob/master/backUp/GetJdCookie2.md) |
+| `JD_COOKIE`             |   京东   | 必须   | 京东cookie,多个账号的cookie使用`&`隔开或者换行。具体获取参考[浏览器获取京东cookie教程](https://github.com/fangpidedongsun/jd_scripts2/blob/master/backUp/GetJdCookie.md) 或者 [插件获取京东cookie教程](https://github.com/fangpidedongsun/jd_scripts2/blob/master/backUp/GetJdCookie2.md) |
 
 ##### 京东隐私安全 环境变量
 
 | Name                    |   归属   | 属性   | 说明                                                         |
 | :---------------------: | :----------: | --------- | ------------------------------------------------------------ |
 | `JD_DEBUG`              |   脚本打印log   | 非必须   | 运行脚本时，是否显示log,默认显示。改成false表示不显示，注重隐私的人可以在设置secret -> `Name:JD_DEBUG,Value:false` |
-| `JD_USER_AGENT`         |   京东   | 非必须   | 自定义此库里京东系列脚本的UserAgent，不懂不知不会UserAgent的请不要随意填写内容。具体获取参考此[issue](https://github.com/lxk0301/jd_scripts/issues/127) |
+| `JD_USER_AGENT`         |   京东   | 非必须   | 自定义此库里京东系列脚本的UserAgent，不懂不知不会UserAgent的请不要随意填写内容。具体获取参考此[issue](https://github.com/fangpidedongsun/jd_scripts2/issues/127) |
 
 ##### 推送通知环境变量(目前提供`微信server酱`、`pushplus(推送加)`、`iOS Bark APP`、`telegram机器人`、`钉钉机器人`、`企业微信机器人`、`iGot`、`QQ酷推`等通知方式)
 
@@ -37,12 +37,12 @@
 
 | Name                        | 归属             | 属性 | 说明                                                                                                                                                                |
 | --------------------------- | ------------------ | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `FRUITSHARECODES`           | 东东农场互助码 | 非必须 | 填写规则请看[jdFruitShareCodes.js](https://github.com/lxk0301/jd_scripts/blob/master/jdFruitShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
-| `PETSHARECODES`             | 东东萌宠互助码 | 非必须 | 填写规则请看[jdPetShareCodes.js](https://github.com/lxk0301/jd_scripts/blob/master/jdPetShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
-| `PLANT_BEAN_SHARECODES`     | 种豆得豆互助码 | 非必须 | 填写规则请看[jdPlantBeanShareCodes.js](https://github.com/lxk0301/jd_scripts/blob/master/jdPlantBeanShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
-| `SUPERMARKET_SHARECODES`    | 东东超市商圈互助码 | 非必须 | 填写规则请看[jdSuperMarketShareCodes.js](https://github.com/lxk0301/jd_scripts/blob/master/jdSuperMarketShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
-| `DDFACTORY_SHARECODES`      | 东东工厂互助码 | 非必须 | 填写规则请看[jdFactoryShareCodes.js](https://github.com/lxk0301/jd_scripts/blob/master/jdFactoryShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
-| `DREAM_FACTORY_SHARE_CODES` | 京喜工厂互助码 | 非必须 | 填写规则请看[jdDreamFactoryShareCodes.js](https://github.com/lxk0301/jd_scripts/blob/master/jdDreamFactoryShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
+| `FRUITSHARECODES`           | 东东农场互助码 | 非必须 | 填写规则请看[jdFruitShareCodes.js](https://github.com/fangpidedongsun/jd_scripts2/blob/master/jdFruitShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
+| `PETSHARECODES`             | 东东萌宠互助码 | 非必须 | 填写规则请看[jdPetShareCodes.js](https://github.com/fangpidedongsun/jd_scripts2/blob/master/jdPetShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
+| `PLANT_BEAN_SHARECODES`     | 种豆得豆互助码 | 非必须 | 填写规则请看[jdPlantBeanShareCodes.js](https://github.com/fangpidedongsun/jd_scripts2/blob/master/jdPlantBeanShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
+| `SUPERMARKET_SHARECODES`    | 东东超市商圈互助码 | 非必须 | 填写规则请看[jdSuperMarketShareCodes.js](https://github.com/fangpidedongsun/jd_scripts2/blob/master/jdSuperMarketShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
+| `DDFACTORY_SHARECODES`      | 东东工厂互助码 | 非必须 | 填写规则请看[jdFactoryShareCodes.js](https://github.com/fangpidedongsun/jd_scripts2/blob/master/jdFactoryShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
+| `DREAM_FACTORY_SHARE_CODES` | 京喜工厂互助码 | 非必须 | 填写规则请看[jdDreamFactoryShareCodes.js](https://github.com/fangpidedongsun/jd_scripts2/blob/master/jdDreamFactoryShareCodes.js)或见下方[互助码的填写规则](#互助码的填写规则) |
 | `JDZZ_SHARECODES`           | 京东赚赚互助码 | 非必须 | 填写规则和上面类似，或见下方[互助码的填写规则](#互助码的填写规则)                                                                       |
 | `JDJOY_SHARECODES`          | 疯狂的JOY互助码 | 非必须 | 填写规则和上面类似，或见下方[互助码的填写规则](#互助码的填写规则)                                                                       |
 | `BOOKSHOP_SHARECODES`       | 京东书店互助码 | 非必须 | 填写规则和上面类似，或见下方[互助码的填写规则](#互助码的填写规则)                                                                       |
@@ -94,7 +94,7 @@
   ```
 
  两个账号各两个互助码的真实示例：
-  ``` 
+  ```
 0a74407df5df4fa99672a037eec61f7e@dbb21614667246fabcfd9685b6f448f3&6fbd26cc27ac44d6a7fed34092453f77@61ff5c624949454aa88561f2cd721bf6&6fbd26cc27ac44d6a7fed34092453f77@61ff5c624949454aa88561f2cd721bf6
   ```
 
@@ -133,4 +133,3 @@ jd_blueCoin.js是每次兑换到了奖品通知一次，
 jd_818.js是每次获取新的互助码会通知一次，以帮助您快速上车，
 其余的脚本平常运行都是不通知，只有在京东cookie失效后，才会推送通知    
   ```
-
