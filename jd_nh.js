@@ -415,7 +415,7 @@ function showMsg() {
     message += `本次运行获得金币${$.score}枚`;
     $.msg($.name, '', `京东账号${$.index}${$.nickName}\n${message}`);
     if ($.isNode()) {
-      await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `${`【京东账号${$.index}】${$.nickName}`}\n${message}`);
+      await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `京东账号${$.index}${$.nickName}\n${message}`);
     resolve()
   })
 }
