@@ -116,11 +116,11 @@ function showMsg() {
 function getRedRain() {
   return new Promise(resolve => {
     $.get({
-      url: "http://qn6l5d6wm.hn-bkt.clouddn.com/jd_live_redrain_half.json?" + Date.now(),
+      url: "http://qn6l5d6wm.hn-bkt.clouddn.com/jd_live_redRain_half.json?" + Date.now(),
     }, (err, resp, data) => {
       try {
         if (err) {
-          console.log(`1111${JSON.stringify(err)}`)
+          console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (safeGet(data)) {
@@ -162,7 +162,7 @@ function receiveRedRain() {
               console.log(`今日次数已满`)
               message += `领取失败，今日已签到\n`;
             } else {
-              console.log(`异常：${JSON.stringify(data)}`)
+              message += `${data.msg}\n`;
             }
           }
         }
