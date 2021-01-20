@@ -1,25 +1,25 @@
 /*
-年货直播红包雨
-活动时间：2021年1月20日-2021年1月30日、2月3日、2月5日每天0,9,11,13,15,17,19,20,21,23点可领
-更新地址：https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_nian.js
+官方号直播红包雨
+活动时间：2021年1月20日-2021年2月5日每天0,9,11,13,15,17,19,20,21,23点可领
+更新地址：https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js
 已支持IOS双京东账号, Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
 ============Quantumultx===============
 [task_local]
-#年货直播红包雨
-0 0,9,11,13,15,17,19,20,21,23 3,5,20-30/1 1,2 * https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_nian.js, tag=年货直播红包雨, img-url=https://raw.githubusercontent.com/shylocks/Loon/main/icons/jd_live_redrain_nian.jpg, enabled=true
+#官方号直播红包雨
+0 0,9,11,13,15,17,19,20,21,23 * * * https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js, tag=官方号直播红包雨, img-url=https://raw.githubusercontent.com/shylocks/Loon/main/icons/jd_live_redrain_offical.jpg, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 0,9,11,13,15,17,19,20,21,23 3,5,20-30/1 1,2 *" script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_nian.js, tag=年货直播红包雨
+cron "0 0,9,11,13,15,17,19,20,21,23 * * *" script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js, tag=官方号直播红包雨
 
 ===============Surge=================
-年货直播红包雨 = type=cron,cronexp="0 0,9,11,13,15,17,19,20,21,23 3,5,20-30/1 1,2 *",wake-system=1,timeout=200,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_nian.js
+官方号直播红包雨 = type=cron,cronexp="0 0,9,11,13,15,17,19,20,21,23 * * *",wake-system=1,timeout=200,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js
 
 ============小火箭=========
-年货直播红包雨 = type=cron,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_nian.js, cronexpr="0 0,9,11,13,15,17,19,20,21,23 3,5,20-30/1 1,2 *", timeout=200, enable=true
+官方号直播红包雨 = type=cron,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js, cronexpr="0 0,9,11,13,15,17,19,20,21,23 * * *", timeout=200, enable=true
  */
-const $ = new Env('年货直播红包雨');
+const $ = new Env('官方号直播红包雨');
 
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -43,7 +43,8 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/api';
 let ids = {
-  '11': 'RRAnabmRSnpzSSZicXUhSFGBvFXs5c',
+  '11': 'RRA2ZMK66tw36bRAZTpb8k9zv8rwaxb',
+  '13': 'RRA2ZMK66tw36bRAZTpb8k9zv8rwaxb',
   '20': 'RRA3q6FQPT9BKg4C6EyhA99TcA9K7SL',
   '21': 'RRA42SucXFqAPggaoYP4c3JYZLHGbkG',
   '22': 'RRAPZRA9mVCzpjH38RUBPseJiZ6oj8',
@@ -115,7 +116,7 @@ function showMsg() {
 function getRedRain() {
   return new Promise(resolve => {
     $.get({
-      url: "http://qn6l5d6wm.hn-bkt.clouddn.com/jd_live_redRain_nian.json?" + Date.now(),
+      url: "http://qn6l5d6wm.hn-bkt.clouddn.com/jd_live_redRain_offical.json?" + Date.now(),
     }, (err, resp, data) => {
       try {
         if (err) {
