@@ -9,24 +9,24 @@
 ============Quantumultx===============
 [task_local]
 #京东炸年兽🧨
-0 8 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js, tag=京东炸年兽🧨, enabled=true
+10 * * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js, tag=京东炸年兽🧨, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/main/Icon/lxk0301/jd_nian.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 8 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js,tag=京东炸年兽🧨
+cron "10 * * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js,tag=京东炸年兽🧨
 
 ===============Surge=================
-京东炸年兽🧨 = type=cron,cronexp="0 8 * * *",wake-system=1,timeout=200,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js
+京东炸年兽🧨 = type=cron,cronexp="10 * * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js
 
 ============小火箭=========
-京东炸年兽🧨 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js, cronexpr="0 8 * * *", timeout=200, enable=true
+京东炸年兽🧨 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_nian.js, cronexpr="10 * * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东炸年兽🧨');
 
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
+let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
 const randomCount = $.isNode() ? 20 : 5;
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
@@ -161,6 +161,7 @@ async function doTask() {
             if (task.status === 1) {
               await collectScore(item.taskId, task.itemId);
             }
+            await $.wait(3000)
           }
         } else if (item.status === 2) {
           console.log(`${item.taskName}已做完`)
@@ -174,6 +175,7 @@ async function doTask() {
           if (task.status === 1) {
             await collectScore(item.taskId, task.itemId, 1);
           }
+          await $.wait(3000)
         }
       } else if(item.status===2){
         console.log(`${item.taskName}已做完`)
@@ -187,6 +189,13 @@ async function doTask() {
             await collectScore(item.taskId, task.itemId, 1);
           }
         }
+      } else if(item.status===2){
+        console.log(`${item.taskName}已做完`)
+      }
+    }else if (item.taskType === 13) {
+      if (item.status === 1) {
+        console.log(`准备做此任务：${item.taskName}`)
+        await collectScore(item.taskId, "1");
       } else if(item.status===2){
         console.log(`${item.taskName}已做完`)
       }
@@ -259,7 +268,7 @@ function getHomeData(info=false) {
               $.secretp = null
               return
             }
-            console.log(`当前爆竹${$.userInfo.raiseInfo.remainScore}🧨，下一关需要${$.userInfo.raiseInfo.nextLevelScore}🧨`)
+            console.log(`当前爆竹${$.userInfo.raiseInfo.remainScore}🧨，下一关需要${$.userInfo.raiseInfo.nextLevelScore-$.userInfo.raiseInfo.curLevelStartScore}🧨`)
 
             if(info) {
               message += `当前爆竹${$.userInfo.raiseInfo.remainScore}🧨\n`
@@ -269,8 +278,8 @@ function getHomeData(info=false) {
               console.log(`可收取的爆竹大于0，去收取爆竹`)
               await collectProduceScore()
             }
-            if(parseInt($.userInfo.raiseInfo.remainScore) >= parseInt($.userInfo.raiseInfo.curLevelStartScore)){
-              console.log(`去升级`)
+            if(parseInt($.userInfo.raiseInfo.remainScore) >= parseInt($.userInfo.raiseInfo.nextLevelScore-$.userInfo.raiseInfo.curLevelStartScore)){
+              console.log(`当前爆竹🧨大于升级所需爆竹🧨，去升级`)
               await $.wait(2000)
               await raise()
             }
@@ -837,7 +846,7 @@ function readShareCode() {
         resolve(data);
       }
     })
-    await $.wait(2000);
+    await $.wait(10000);
     resolve()
   })
 }

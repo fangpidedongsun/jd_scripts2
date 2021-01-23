@@ -7,17 +7,17 @@
 ============Quantumultx===============
 [task_local]
 #官方号直播红包雨
-0 0,9,11,13,15,17,19,20,21,23 * * * https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js, tag=官方号直播红包雨, img-url=https://raw.githubusercontent.com/shylocks/Loon/main/icons/jd_live_redrain_offical.jpg, enabled=true
+0 0,9,11,13,15,17,19,20,21,22,23 * * * https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js, tag=官方号直播红包雨, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_live_redrain_offical.jpg, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 0,9,11,13,15,17,19,20,21,23 * * *" script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js, tag=官方号直播红包雨
+cron "0 0,9,11,13,15,17,19,20,21,22,23 * * *" script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js, tag=官方号直播红包雨
 
 ===============Surge=================
-官方号直播红包雨 = type=cron,cronexp="0 0,9,11,13,15,17,19,20,21,23 * * *",wake-system=1,timeout=200,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js
+官方号直播红包雨 = type=cron,cronexp="0 0,9,11,13,15,17,19,20,21,22,23 * * *",wake-system=1,timeout=200,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js
 
 ============小火箭=========
-官方号直播红包雨 = type=cron,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js, cronexpr="0 0,9,11,13,15,17,19,20,21,23 * * *", timeout=200, enable=true
+官方号直播红包雨 = type=cron,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_live_redrain_offical.js, cronexpr="0 0,9,11,13,15,17,19,20,21,22,23 * * *", timeout=200, enable=true
  */
 const $ = new Env('官方号直播红包雨');
 
@@ -43,13 +43,14 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/api';
 let ids = {
-  '11': 'RRA2ZMK66tw36bRAZTpb8k9zv8rwaxb',
-  '13': 'RRA2ZMK66tw36bRAZTpb8k9zv8rwaxb',
+  '9':'RRA3vyGH4MRwCJELDwV7p24mNAByiSk',
+  '11': 'RRA3q6FQPT9BKg4C6EyhA99TcA9K7SL',
+  '13': 'RRA4AmPxr1Qv1vTDpFgNS57rjn1mjGQ',
   '20': 'RRA3q6FQPT9BKg4C6EyhA99TcA9K7SL',
   '21': 'RRA42SucXFqAPggaoYP4c3JYZLHGbkG',
   '22': 'RRAPZRA9mVCzpjH38RUBPseJiZ6oj8',
   '23': 'RRA4AmPxr1Qv1vTDpFgNS57rjn1mjGQ',
-  '9':'RRA3vyGH4MRwCJELDwV7p24mNAByiSk'
+  '0': 'RRA4AmPxr1Qv1vTDpFgNS57rjn1mjGQ',
 }
 !(async () => {
   if (!cookiesArr[0]) {
@@ -156,11 +157,11 @@ function receiveRedRain() {
             if (data.subCode === '0') {
               console.log(`领取成功，获得${JSON.stringify(data.lotteryResult)}`)
               // message+= `领取成功，获得${JSON.stringify(data.lotteryResult)}\n`
-              message += `${data.lotteryResult.jPeasList[0].ext}:${(data.lotteryResult.jPeasList[0].quantity)}京豆\n`
+              message += `领取成功，获得 ${(data.lotteryResult.jPeasList[0].quantity)}京豆`
 
             } else if (data.subCode === '8') {
               console.log(`今日次数已满`)
-              message += `领取失败，今日已签到\n`;
+              message += `领取失败，本场已领过`;
             } else {
               console.log(`异常：${JSON.stringify(data)}`)
             }
