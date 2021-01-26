@@ -9,17 +9,17 @@ crazyJoy任务
 ============Quantumultx===============
 [task_local]
 #crazyJoy任务
-10 7 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy.js, tag=crazyJoy任务, enabled=true
+10 7 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy.js, tag=crazyJoy任务, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_crazy_joy.png, enabled=true
 
 ================Loon==============
 [Script]
 cron "10 7 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy.js,tag=crazyJoy任务
 
 ===============Surge=================
-crazyJoy任务 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy.js
+crazyJoy任务 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy.js
 
 ============小火箭=========
-crazyJoy任务 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy.js, cronexpr="10 7 * * *", timeout=200, enable=true
+crazyJoy任务 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_crazy_joy.js, cronexpr="10 7 * * *", timeout=3600, enable=true
 
  */
 
@@ -175,10 +175,12 @@ if ($.isNode()) {
     return;
   }
   await requireConfig();
-  $.nextCode = ["EdLPh8A6X5G1iWXu-uPYfA==", "nCQQXQHKGjPCb7jkd8q2U-aCTjZMxL3s"];
-  $.nextCode = $.nextCode[randomNumber(0, $.nextCode.length)];
   $.selfCodes = []
   for (let i = 0; i < cookiesArr.length; i++) {
+    if (i%2===0) {
+      $.nextCode = ["EdLPh8A6X5G1iWXu-uPYfA==", "nCQQXQHKGjPCb7jkd8q2U-aCTjZMxL3s"];
+      $.nextCode = $.nextCode[randomNumber(0, $.nextCode.length)];
+    }
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])

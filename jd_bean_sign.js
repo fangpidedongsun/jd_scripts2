@@ -2,13 +2,11 @@
  * @Author: LXK9301 https://github.com/LXK9301
  */
 /*
-京豆签到,自用,可N个京东账号,IOS软件用户请使用 https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js
+京豆签到,自用,可N个京东账号
 Node.JS专用
+IOS软件用户请使用 https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js
 更新时间：2021-1-19
-从 github @ruicky改写而来
-version v0.0.1
-create by ruicky
-detail url: https://github.com/ruicky/jd_sign_bot
+Modified From github https://github.com/ruicky/jd_sign_bot
  */
 const $ = new Env('京豆签到');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -149,7 +147,7 @@ async function changeFile (content) {
   let newContent = content.replace(/var Key = ''/, `var Key = '${cookie}'`);
   newContent = newContent.replace(/const NodeSet = 'CookieSet.json'/, `const NodeSet = '${NodeSet}'`)
   if (process.env.JD_BEAN_STOP && process.env.JD_BEAN_STOP !== '0') {
-    newContent = newContent.replace(/var stop = 0/, `var stop = ${process.env.JD_BEAN_STOP * 1}`);
+    newContent = newContent.replace(/var stop = '0'/, `var stop = '${process.env.JD_BEAN_STOP}'`);
   }
   const zone = new Date().getTimezoneOffset();
   if (zone === 0) {
