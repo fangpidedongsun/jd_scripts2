@@ -1,21 +1,27 @@
 /*
-京东天天加速链接：https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_speed.js
+京东天天加速链接：https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_speed.js
 更新时间：2020-12-25
 支持京东双账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 每天4京豆，再小的苍蝇也是肉
 从 https://github.com/Zero-S1/JD_tools/blob/master/JD_speed.py 改写来的
 建议3小时运行一次，打卡时间间隔是6小时
+=================QuantumultX==============
+[task_local]
+#天天加速
+8 0-23/3 * * * https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_speed.js, tag=京东天天加速, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdjs.png, enabled=true
+
+============Loon================
+[Script]
+cron "8 0-23/3 * * *" script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_speed.js,tag=京东天天加速
+
+===========Surge============
+天天加速 = type=cron,cronexp="8 0-23/3 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_speed.js
+
+==============小火箭=============
+天天加速 = type=cron,script-path=https://raw.githubusercontent.com/LXK9301/jd_scripts/master/jd_speed.js, cronexpr="11 0-23/3 * * *", timeout=3600, enable=true
 */
-// quantumultx
-// [task_local]
-// #天天加速
-// 8 */3 * * * https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_speed.js, tag=京东天天加速, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdjs.png, enabled=true
-// Loon
-// [Script]
-// cron "8 */3 * * *" script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_speed.js,tag=京东天天加速
-// Surge
-//天天加速 = type=cron,cronexp="8 */3 * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_speed.js
+
 const $ = new Env('✈️天天加速');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -118,7 +124,7 @@ function jDSpeedUp(sourceId) {
             } else {
               console.log("\n" + "天天加速-开始本次任务 ");
             }
-            if (res.info.isLogin === 1) {
+            if (res.code === 0 && res.success) {
               subTitle = `【奖励】${res.data.beans_num}京豆`;
               if (res.data.task_status === 0) {
                 const taskID = res.data.source_id;
@@ -153,15 +159,14 @@ function jDSpeedUp(sourceId) {
               } else {
                 console.log("\n" + "天天加速-判断状态码失败")
               }
-            } else {
-              console.log("\n" + "天天加速-判断状态失败")
             }
           } else {
             console.log(`京豆api返回数据为空，请检查自身原因`)
           }
         }
       } catch (e) {
-        $.msg("京东天天-加速" + e.name + "‼️", JSON.stringify(e), e.message)
+        // $.msg("京东天天-加速" + e.name + "‼️", JSON.stringify(e), e.message)
+        $.logErr(e, resp);
       } finally {
         resolve()
       }
@@ -215,7 +220,8 @@ function spaceEventList() {
           }
         }
       } catch (e) {
-        $.msg("天天加速-查询太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
+        // $.msg("天天加速-查询太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
+        $.logErr(e, resp)
       } finally {
         resolve(spaceEvents)
       }
@@ -262,7 +268,8 @@ function spaceEventHandleEvent(spaceEventList) {
               }
             }
           } catch (e) {
-            $.msg("天天加速-查询处理太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
+            // $.msg("天天加速-查询处理太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
+            $.logErr(e, resp)
           } finally {
             if (spaceEventList.length === spaceNumTask) {
               console.log("\n天天加速-已成功处理" + spaceNumTask + "个太空特殊事件")
@@ -318,7 +325,8 @@ function energyPropList() {
           }
         }
       } catch (eor) {
-        $.msg("天天加速-查询燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
+        // $.msg("天天加速-查询燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
+        $.logErr(e, resp)
       } finally {
         resolve(TaskID)
       }
@@ -363,7 +371,8 @@ function receiveEnergyProp(CID) {
               }
             }
           } catch (eor) {
-            $.msg("天天加速-领取可用燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
+            // $.msg("天天加速-领取可用燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
+            $.logErr(e, resp)
           } finally {
             if (CID.length === count) {
               console.log("\n天天加速-已成功领取" + NumTask + "个可用燃料")
@@ -399,27 +408,30 @@ function energyPropUsaleList(EID) {
         } else {
           if (data) {
             const cc = JSON.parse(data);
-            if (cc.data.length > 0) {
-              for (let i = 0; i < cc.data.length; i++) {
-                if (cc.data[i].id) {
-                  TaskCID += cc.data[i].id + ",";
+            if (cc.code === 0 && cc.success) {
+              if (cc.data.length > 0) {
+                for (let i = 0; i < cc.data.length; i++) {
+                  if (cc.data[i].id) {
+                    TaskCID += cc.data[i].id + ",";
+                  }
                 }
-              }
-              if (TaskCID.length > 0) {
-                TaskCID = TaskCID.substr(0, TaskCID.length - 1).split(",")
-                console.log("\n天天加速-查询成功" + TaskCID.length + "个燃料ID")
+                if (TaskCID.length > 0) {
+                  TaskCID = TaskCID.substr(0, TaskCID.length - 1).split(",")
+                  console.log("\n天天加速-查询成功" + TaskCID.length + "个燃料ID")
+                } else {
+                  console.log("\n天天加速-暂无有效燃料ID")
+                }
               } else {
-                console.log("\n天天加速-暂无有效燃料ID")
+                console.log("\n天天加速-查询无燃料ID")
               }
-            } else {
-              console.log("\n天天加速-查询无燃料ID")
             }
           } else {
             console.log(`京豆api返回数据为空，请检查自身原因`)
           }
         }
       } catch (eor) {
-        $.msg("天天加速-燃料ID" + eor.name + "‼️", JSON.stringify(eor), eor.message)
+        // $.msg("天天加速-燃料ID" + eor.name + "‼️", JSON.stringify(eor), eor.message)
+        $.logErr(e, resp)
       } finally {
         resolve(TaskCID)
       }
@@ -469,7 +481,8 @@ function useEnergy(PropID) {
               }
             }
           } catch (eor) {
-            $.msg("天天加速-使用燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
+            // $.msg("天天加速-使用燃料" + eor.name + "‼️", JSON.stringify(eor), eor.message)
+            $.logErr(e, resp)
           } finally {
             if (PropID.length === PropCount) {
               console.log("\n天天加速-已成功使用" + PropNumTask + "个燃料")
@@ -483,6 +496,7 @@ function useEnergy(PropID) {
     }
   })
 }
+//虫洞
 function getMemBerList() {
   return new Promise((resolve) => {
     const body = { "source": "game", "status": 0};
@@ -503,6 +517,12 @@ function getMemBerList() {
           if (safeGet(data)) {
             data = JSON.parse(data);
             if (data && data.success) {
+              for (let item of data.data) {
+                if (item['taskStatus'] === 0) {
+                  $.log(`去领取【${item['title']}】任务\n`)
+                  await getMemBerGetTask(item['sourceId']);
+                }
+              }
               $.getRewardBeans = 0;
               console.log(`\n检查是否可领虫洞京豆奖励`)
               $.memBerList = data.data.filter(item => item['taskStatus'] === 2);
@@ -521,7 +541,40 @@ function getMemBerList() {
           }
         }
       } catch (e) {
-        $.msg("天天加速-查询太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
+        // $.msg("天天加速-查询太空特殊事件" + e.name + "‼️", JSON.stringify(e), e.message)
+        $.logErr(e, resp)
+      } finally {
+        resolve()
+      }
+    })
+  })
+}
+//领取虫洞任务API
+function getMemBerGetTask(sourceId) {
+  return new Promise((resolve) => {
+    const body = { "source": "game", sourceId};
+    const options = {
+      url: `${JD_API_HOST}?appid=memberTaskCenter&functionId=member_getTask&body=${escape(JSON.stringify(body))}&_t=${Date.now()}`,
+      headers: {
+        Referer: 'https://h5.m.jd.com/babelDiy/Zeus/6yCQo2eDJPbyPXrC3eMCtMWZ9ey/index.html',
+        Cookie: cookie,
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0")
+      }
+    }
+    $.get(options, async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+          console.log(`${JSON.stringify(err)}`)
+        } else {
+          if (safeGet(data)) {
+            data = JSON.parse(data);
+            if (data && data.success) {
+              // $.getRewardBeans += data.data.beans;
+            }
+          }
+        }
+      } catch (e) {
         $.logErr(e, resp)
       } finally {
         resolve()
