@@ -1,20 +1,26 @@
 /*
-京小超兑换奖品 脚本地址：https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_blueCoin.js
+东东超市兑换奖品 脚本地址：https://gitee.com/lxk0301/jd_scripts/raw/master/jd_blueCoin.js
 感谢@yangtingxiao提供PR
 更新时间：2020-12-24
+活动入口：京东APP我的-更多工具-东东超市
 支持京东多个账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
-======================quantumultx===============
+============QuantumultX==============
 [task_local]
-#京小超兑换奖品
-0 0 0 * * * https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_blueCoin.js, tag=京小超兑换奖品, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxc.png, enabled=true
+#东东超市兑换奖品
+0 0 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_blueCoin.js, tag=东东超市兑换奖品, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxc.png, enabled=true
+
 ====================Loon=================
 [Script]
-cron "0 0 0 * * *" script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_blueCoin.js,tag=京小超兑换奖品
+cron "0 0 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_blueCoin.js,tag=东东超市兑换奖品
+
 ===================Surge==================
-京小超兑换奖品 = type=cron,cronexp="0 0 0 * * *",wake-system=1,timeout=20,script-path=https://raw.githubusercontent.com/lxk0301/jd_scripts/master/jd_blueCoin.js
+东东超市兑换奖品 = type=cron,cronexp="0 0 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_blueCoin.js
+
+============小火箭=========
+东东超市兑换奖品 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_blueCoin.js, cronexpr="0 0 0 * * *", timeout=3600, enable=true
  */
-const $ = new Env('京小超兑换奖品');
+const $ = new Env('东东超市兑换奖品');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -75,13 +81,17 @@ const JD_API_HOST = `https://api.m.jd.com/api?appid=jdsupermarket`;
           coinToBeans = process.env.MARKET_COIN_TO_BEANS;
         }
       }
-      if (`${coinToBeans}` !== '0') {
-        await smtgHome();//查询蓝币数量，是否满足兑换的条件
-        await PrizeIndex();
-      } else {
-        console.log('查询到您设置的是不兑换京豆选项，现在为您跳过兑换京豆。如需兑换，请去BoxJs设置或者修改脚本coinToBeans\n')
+      try {
+        if (`${coinToBeans}` !== '0') {
+          await smtgHome();//查询蓝币数量，是否满足兑换的条件
+          await PrizeIndex();
+        } else {
+          console.log('查询到您设置的是不兑换京豆选项，现在为您跳过兑换京豆。如需兑换，请去BoxJs设置或者修改脚本coinToBeans\n')
+        }
+        await msgShow();
+      } catch (e) {
+        $.logErr(e)
       }
-      await msgShow();
     }
   }
 })()
@@ -312,7 +322,7 @@ function smtgHome() {
     $.get(taskUrl('smtg_home'), (err, resp, data) => {
       try {
         if (err) {
-          console.log('\n京小超兑换奖品: API查询请求失败 ‼️‼️')
+          console.log('\n东东超市兑换奖品: API查询请求失败 ‼️‼️')
           console.log(JSON.stringify(err));
         } else {
           if (safeGet(data)) {
