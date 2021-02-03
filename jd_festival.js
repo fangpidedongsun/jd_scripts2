@@ -1,24 +1,24 @@
 /*
 京东手机年终奖
 活动时间：2021年1月26日～2021年2月8日
-更新地址：https://raw.githubusercontent.com/shylocks/Loon/main/jd_festival.js
+更新地址：https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js
 活动入口：https://shopping-festival.m.jd.com
 已支持IOS双京东账号, Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
 ============Quantumultx===============
 [task_local]
 #京东手机年终奖
-15 0 * * * https://raw.githubusercontent.com/shylocks/Loon/main/jd_festival.js, tag=京东手机年终奖, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_festival2.jpg, enabled=true
+15 0 * * * https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js, tag=京东手机年终奖, img-url=https://raw.githubusercontent.com/yogayyy/Scripts/master/Icon/shylocks/jd_festival2.jpg, enabled=true
 
 ================Loon==============
 [Script]
-cron "15 0 * * *" script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_festival.js, tag=京东手机年终奖
+cron "15 0 * * *" script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js, tag=京东手机年终奖
 
 ===============Surge=================
-京东手机年终奖 = type=cron,cronexp="15 0 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_festival.js
+京东手机年终奖 = type=cron,cronexp="15 0 * * *",wake-system=1,timeout=3600,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js
 
 ============小火箭=========
-京东手机年终奖 = type=cron,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_festival.js, cronexpr="15 0 * * *", timeout=3600, enable=true
+京东手机年终奖 = type=cron,script-path=https://gitee.com/lxk0301/jd_scripts/raw/master/jd_festival.js, cronexpr="15 0 * * *", timeout=3600, enable=true
  */
 const $ = new Env('京东手机年终奖');
 
@@ -40,6 +40,7 @@ if ($.isNode()) {
   })
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => {
   };
+  if (JSON.stringify(process.env).indexOf('GITHUB') > -1) process.exit(0)
 } else {
   let cookiesData = $.getdata('CookiesJD') || "[]";
   cookiesData = jsonParse(cookiesData);
@@ -72,8 +73,6 @@ const JD_API_HOST = 'https://shopping-festival.m.jd.com/sf/';
 
         if ($.isNode()) {
           await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-        } else {
-          $.setdata('', `CookieJD${i ? i + 1 : ""}`);//cookie失效，故清空cookie。$.setdata('', `CookieJD${i ? i + 1 : "" }`);//cookie失效，故清空cookie。
         }
         continue
       }
