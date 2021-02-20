@@ -14,6 +14,7 @@
 [Script]
 cron "1 8,9 14-31/1 1 *" script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_bj.js,tag=宝洁美发屋
 
+
 ===============Surge=================
 宝洁美发屋 = type=cron,cronexp="1 8,9 14-31/1 1 *",wake-system=1,timeout=200,script-path=https://raw.githubusercontent.com/shylocks/Loon/main/jd_bj.js
 
