@@ -1,23 +1,23 @@
 /*
 监控crazyJoy分红狗每天是否达到分红标准以及获得多少数量的京豆
-有分红JOY的 每天12点后运行一次即可
+有分红JOY的 每天12点后运行一次即可，有分红京豆才会通知
 活动入口：京东APP我的-更多工具-疯狂的JOY
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
 [task_local]
 #监控crazyJoy分红
-10 7 * * * https://jdsharedresourcescdn.azureedge.net/jdresource/jd_crazy_joy_bonus.js, tag=监控crazyJoy分红, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_crazy_joy.png, enabled=true
+10 12 * * * https://jdsharedresourcescdn.azureedge.net/jdresource/jd_crazy_joy_bonus.js, tag=监控crazyJoy分红, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_crazy_joy.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "10 7 * * *" script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_crazy_joy_bonus.js,tag=监控crazyJoy分红
+cron "10 12 * * *" script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_crazy_joy_bonus.js,tag=监控crazyJoy分红
 
 ===============Surge=================
-监控crazyJoy分红 = type=cron,cronexp="10 7 * * *",wake-system=1,timeout=3600,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_crazy_joy_bonus.js
+监控crazyJoy分红 = type=cron,cronexp="10 12 * * *",wake-system=1,timeout=3600,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_crazy_joy_bonus.js
 
 ============小火箭=========
-监控crazyJoy分红 = type=cron,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_crazy_joy_bonus.js, cronexpr="10 7 * * *", timeout=3600, enable=true
+监控crazyJoy分红 = type=cron,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_crazy_joy_bonus.js, cronexpr="10 12 * * *", timeout=3600, enable=true
 
  */
 const $ = new Env('监控crazyJoy分红');
@@ -90,7 +90,7 @@ function getBonus() {
               $.log(`昨日获得京豆数量：${data.data.selfDayBonusBean}\n`)
               if (data.data.selfBonusJoy && data.data.selfDayBonusFlag) {
                 if ($.isNode()) await notify.sendNotify(`${$.name} - 账号${$.index} - ${$.nickName}`, `京东账号${$.index} ${$.nickName}\n${data.data.selfBonusJoy}只分红Joy获得京豆：${data.data.selfDayBonusBean}`)
-                $.msg($.name, `京东账号${$.index} ${$.nickName}\n${data.data.selfBonusJoy}只分红Joy获得京豆：${data.data.selfDayBonusBean}`);
+                $.msg($.name, '', `京东账号${$.index} ${$.nickName}\n${data.data.selfBonusJoy}只分红Joy获得京豆：${data.data.selfDayBonusBean}`);
               }
             }
           }
@@ -166,7 +166,11 @@ function TotalBean() {
               $.isLogin = false; //cookie过期
               return
             }
-            $.nickName = data['base'].nickname;
+            if (data['retcode'] === 0) {
+              $.nickName = data['base'].nickname;
+            } else {
+              $.nickName = $.UserName
+            }
           } else {
             console.log(`京东服务器返回空数据`)
           }

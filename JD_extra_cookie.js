@@ -18,6 +18,7 @@ new Env('获取多账号京东Cookie');//此处忽略即可，为自动生成iOS
 [MITM]
 hostname = wq.jd.com
 
+
 ===================Quantumult X=====================
 [rewrite_local]
 # 获取多账号京东Cookie

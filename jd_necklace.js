@@ -2,7 +2,7 @@
  * @Author: LXK9301 https://github.com/LXK9301
  * @Date: 2020-11-20 11:42:03
  * @Last Modified by: LXK9301
- * @Last Modified time: 2020-12-12 12:27:14
+ * @Last Modified time: 2021-2-27 12:27:14
  */
 /*
 点点券，可以兑换无门槛红包（1元，5元，10元，100元，部分红包需抢购）
@@ -26,7 +26,7 @@ cron "10 0,20 * * *" script-path=https://jdsharedresourcescdn.azureedge.net/jdre
 点点券 = type=cron,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_necklace.js, cronexpr="10 0,20 * * *", timeout=3600, enable=true
  */
 const $ = new Env('点点券');
-
+let allMessage = ``;
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -70,6 +70,9 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
       await jd_necklace();
     }
   }
+  if ($.isNode() && allMessage) {
+    await notify.sendNotify(`${$.name}`, `${allMessage}`, { url: openUrl })
+  }
 })()
     .catch((e) => {
       $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -94,7 +97,10 @@ function showMsg() {
       $.msg($.name, '', `京东账号${$.index} ${$.nickName}\n当前${$.name}：${$.totalScore}个\n可兑换无门槛红包：${$.totalScore / 1000}元\n点击弹窗即可去兑换(注：此红包具有时效性)`, { 'open-url': openUrl});
     }
     // 云端大于10元无门槛红包时进行通知推送
-    if ($.isNode() && $.totalScore >= 10000 && nowTimes.getHours() >= 20) await notify.sendNotify(`${$.name} - 京东账号${$.index} - ${$.nickName}`, `京东账号${$.index} ${$.nickName}\n当前${$.name}：${$.totalScore}个\n可兑换无门槛红包：${$.totalScore / 1000}元\n点击链接即可去兑换(注：此红包具有时效性)\n↓↓↓ \n\n ${openUrl} \n\n ↑↑↑`, { url: openUrl })
+    // if ($.isNode() && $.totalScore >= 20000 && nowTimes.getHours() >= 20) await notify.sendNotify(`${$.name} - 京东账号${$.index} - ${$.nickName}`, `京东账号${$.index} ${$.nickName}\n当前${$.name}：${$.totalScore}个\n可兑换无门槛红包：${$.totalScore / 1000}元\n点击链接即可去兑换(注：此红包具有时效性)\n↓↓↓ \n\n ${openUrl} \n\n ↑↑↑`, { url: openUrl })
+    if ($.isNode() && $.totalScore >= 20000 && nowTimes.getHours() >= 20) {
+      allMessage += `京东账号${$.index} ${$.nickName}\n当前${$.name}：${$.totalScore}个\n可兑换无门槛红包：${$.totalScore / 1000}元\n点击链接即可去兑换(注：此红包具有时效性)${$.index !== cookiesArr.length ? '\n\n' : '\n↓↓↓ \n\n ${openUrl} \n\n ↑↑↑'}`
+    }
     resolve()
   })
 }
@@ -110,7 +116,9 @@ async function doTask() {
     } else if (item.taskStage === 3) {
       console.log(`${item.taskName}奖励已领取`);
     } else if (item.taskStage === 1) {
-      console.log(`${item.taskName}任务未完成\n`);
+      console.log(`${item.taskName}任务未完成,开始做此任务\n`);
+      if (item['taskType'] === 3) await doAppTask('3');
+      if (item['taskType'] === 4) await doAppTask('4');
     }
   }
 }
@@ -283,6 +291,81 @@ function necklace_homePage() {
     })
   })
 }
+
+async function doAppTask(type = '3') {
+  let body = {
+    "pageClickKey": "CouponCenter",
+    "childActivityUrl": "openapp.jdmobile%3a%2f%2fvirtual%3fparams%3d%7b%5c%22category%5c%22%3a%5c%22jump%5c%22%2c%5c%22des%5c%22%3a%5c%22couponCenter%5c%22%7d",
+    "lat": "",
+    "globalLat": "",
+    "lng": "",
+    "globalLng": ""
+  }
+  await getCcTaskList('getCcTaskList', body, type);
+  body = {
+    "globalLng": "",
+    "globalLat": "",
+    "monitorSource": "ccgroup_ios_index_task",
+    "monitorRefer": "",
+    "taskType": "2",
+    "childActivityUrl": "openapp.jdmobile%3a%2f%2fvirtual%3fparams%3d%7b%5c%22category%5c%22%3a%5c%22jump%5c%22%2c%5c%22des%5c%22%3a%5c%22couponCenter%5c%22%7d",
+    "pageClickKey": "CouponCenter",
+    "lat": "",
+    "taskId": "necklace_89",
+    "lng": "",
+  }
+  if (type === '4') body['taskId'] = 'necklace_91';
+  await $.wait(15500);
+  await getCcTaskList('reportCcTask', body, type);
+}
+function getCcTaskList(functionId, body, type = '3') {
+  let url = '';
+  return new Promise(resolve => {
+    if (functionId === 'getCcTaskList') {
+      url = `https://api.m.jd.com/client.action?functionId=${functionId}&body=${escape(JSON.stringify(body))}&uuid=8888888&client=apple&clientVersion=9.4.1&st=1614320848090&sign=d3259c0c19f6c792883485ae65f8991c&sv=111`
+    }
+    if (type === '3' && functionId === 'reportCcTask') url = `https://api.m.jd.com/client.action?functionId=${functionId}&body=${escape(JSON.stringify(body))}&uuid=8888888&client=apple&clientVersion=9.4.1&st=1614320901023&sign=26e637ba072ddbcfa44c5273ef928696&sv=111`
+    if (type === '4' && functionId === 'reportCcTask') url = `https://api.m.jd.com/client.action?functionId=${functionId}&body=${escape(JSON.stringify(body))}&uuid=8888888&client=apple&clientVersion=9.4.1&st=1614323577039&sign=67f8f57a96816a6efe33b7c9676a5cec&sv=111`
+    // if (functionId === 'reportCcTask') {
+    //   url = `https://api.m.jd.com/client.action?functionId=${functionId}&body=${escape(JSON.stringify(body))}&uuid=8888888&client=apple&clientVersion=9.4.1&st=1614320901023&sign=26e637ba072ddbcfa44c5273ef928696&sv=111`
+    // }
+    const options = {
+      url,
+      body: `body=${escape(JSON.stringify(body))}`,
+      headers: {
+        "Accept": "application/json, text/plain, */*",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "zh-cn",
+        "Connection": "keep-alive",
+        "Content-Length": "63",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Host": "api.m.jd.com",
+        "Origin": "https://h5.m.jd.com",
+        "Cookie": cookie,
+        "Referer": "https://h5.m.jd.com/babelDiy/Zeus/4ZK4ZpvoSreRB92RRo8bpJAQNoTq/index.html",
+        "User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.2.2;14.2;%E4%BA%AC%E4%B8%9C/9.2.2 CFNetwork/1206 Darwin/20.1.0"),
+      }
+    }
+    $.post((options), async (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (safeGet(data)) {
+            if (type === '3') console.log(`点击首页领券图标(进入领券中心浏览15s)任务:${data}`)
+            if (type === '4') console.log(`点击“券后9.9”任务:${data}`)
+            // data = JSON.parse(data);
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve();
+      }
+    })
+  })
+}
 function taskPostUrl(function_id, body = {}) {
   const time = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000;
   return {
@@ -320,7 +403,11 @@ function TotalBean() {
               $.isLogin = false; //cookie过期
               return
             }
-            $.nickName = data['base'].nickname;
+            if (data['retcode'] === 0) {
+              $.nickName = data['base'].nickname;
+            } else {
+              $.nickName = $.UserName
+            }
           } else {
             console.log(`京东服务器返回空数据`)
           }
