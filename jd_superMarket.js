@@ -76,7 +76,6 @@ let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好�
       //await shareCodesFormat();//格式化助力码
       await jdSuperMarket();
       await showMsg();
-      if (helpAu === true) await helpAuthor();
       // await businessCircleActivity();
     }
   }
@@ -107,6 +106,7 @@ async function jdSuperMarket() {
     await smtgHome();
     await receiveUserUpgradeBlue();
     await Home();
+    if (helpAu === true) await helpAuthor();
   } catch (e) {
     $.logErr(e)
   }
@@ -216,11 +216,11 @@ async function doDailyTask() {
 
 async function receiveGoldCoin() {
   $.goldCoinData = await smtgReceiveCoin({ "type": 0 });
-  if ($.goldCoinData.data.bizCode === 0) {
+  if ($.goldCoinData.data && $.goldCoinData.data.bizCode === 0) {
     console.log(`领取金币成功${$.goldCoinData.data.result.receivedGold}`)
     message += `【领取金币】${$.goldCoinData.data.result.receivedGold}个\n`;
   } else {
-    console.log(`${$.goldCoinData.data.bizMsg}`);
+    console.log(`${$.goldCoinData.data && $.goldCoinData.data.bizMsg}`);
   }
 }
 
@@ -1064,6 +1064,7 @@ function smtgDoAssistPkTask(code) {
   })
 }
 function smtgReceiveCoin(body) {
+  $.goldCoinData = {};
   return new Promise((resolve) => {
     $.get(taskUrl('smtg_receiveCoin', body), (err, resp, data) => {
       try {
@@ -1553,7 +1554,7 @@ function TotalBean() {
               return
             }
             if (data['retcode'] === 0) {
-              $.nickName = data['base'].nickname;
+              $.nickName = (data['base'] && data['base'].nickname) || $.UserName;
             } else {
               $.nickName = $.UserName
             }
