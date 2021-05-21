@@ -171,8 +171,8 @@ async function doCultureBean() {
 async function stealFriendWater() {
   await stealFriendList();
   if ($.stealFriendList && $.stealFriendList.code === '0') {
-    if ($.stealFriendList.data.tips) {
-      console.log('偷取好友营养液今日已达上限');
+    if ($.stealFriendList.data && $.stealFriendList.data.tips) {
+      console.log('\n\n今日偷取好友营养液已达上限\n\n');
       return
     }
     if ($.stealFriendList.data && $.stealFriendList.data.friendInfoList && $.stealFriendList.data.friendInfoList.length > 0) {
@@ -531,7 +531,7 @@ async function plantBeanIndex() {
 }
 function readShareCode() {
   return new Promise(async resolve => {
-    $.get({url: `http://jd.turinglabs.net/api/v2/jd/bean/read/${randomCount}/`, timeout: 10000}, (err, resp, data) => {
+    $.get({url: `http://share.turinglabs.net/api/v3/bean/query/${randomCount}/`, timeout: 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
