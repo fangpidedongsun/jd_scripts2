@@ -1,6 +1,5 @@
 /*
-家电星推官脚本
-Last Modified time: 2021-05-31 9:15:04
+家电星推官好友互助脚本
 家电星推官活动地址：https://3.cn/-1eD1VOa?_ts=1622072397979&utm_source=iosapp&utm_medium=appshare&utm_campaign=t_335139774&utm_term=CopyURL&ad_od=share&gx=RnFtxGZZPTONndRP--twDLBLeC4DoX3_2wf2
 活动时间：2021年5月27日 00:00:00-2021年6月18日 23:59:59
 京豆先到先得！！！！！！！！！！！
@@ -8,20 +7,20 @@ Last Modified time: 2021-05-31 9:15:04
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
 [task_local]
-#家电星推官
-0 0 0 * * * https://jdsharedresourcescdn.azureedge.net/jdresource/jd_xtg.js, tag=家电星推官, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+#家电星推官好友互助
+0 0 0 * * * https://jdsharedresourcescdn.azureedge.net/jdresource/jd_xtg_help.js, tag=家电星推官好友互助, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "0 0 0 * * *" script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_xtg.js,tag=家电星推官
+cron "0 0 0 * * *" script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_xtg_help.js,tag=家电星推官好友互助
 
 ===============Surge=================
-家电星推官 = type=cron,cronexp="0 0 0 * * *",wake-system=1,timeout=3600,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_xtg.js
+家电星推官好友互助 = type=cron,cronexp="0 0 0 * * *",wake-system=1,timeout=3600,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_xtg_help.js
 
 ============小火箭=========
-家电星推官 = type=cron,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_xtg.js, cronexpr="0 0 0 * * *", timeout=3600, enable=true
+家电星推官好友互助 = type=cron,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_xtg_help.js, cronexpr="0 0 0 * * *", timeout=3600, enable=true
  */
-const $ = new Env("家电星推官");
+const $ = new Env("家电星推官好友互助");
 const activeEndTime = "2021/06/18 23:59:59+08:00"; //活动结束时间
 const notify = $.isNode() ? require("./sendNotify") : "";
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -63,59 +62,7 @@ const JD_API_HOST = "https://guardianstarjd.m.jd.com/star";
   }
   cookie = cookiesArr[0];
   await starRanking();
-  for (let i = 0; i < cookiesArr.length; i++) {
-    if (cookiesArr[i]) {
-      cookie = cookiesArr[i];
-      $.UserName = decodeURIComponent(
-          cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]
-      );
-      $.index = i + 1;
-      $.beanCount = 0;
-      $.jdNum = 0;
-      $.isLogin = true;
-      $.nickName = "";
-      $.shareID = [];
-      await TotalBean();
-      console.log(
-          `\n===============开始【京东账号${$.index}】${
-              $.nickName || $.UserName
-          }==================\n`
-      );
-      if (!$.isLogin) {
-        $.msg(
-            $.name,
-            `【提示】cookie已失效`,
-            `京东账号${$.index} ${
-                $.nickName || $.UserName
-            }\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`,
-            { "open-url": "https://bean.m.jd.com/bean/signIndex.action" }
-        );
 
-        if ($.isNode()) {
-          await notify.sendNotify(
-              `${$.name}cookie已失效 - ${$.UserName}`,
-              `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`
-          );
-        }
-        continue;
-      }
-      console.log(`一共${starID.length}个${$.name}任务，耗时会很久，京豆先到先得！！！！！！！！！！！
-请提前知晓`);
-      // $.beanCount = beforeTotal && beforeTotal['base'].jdNum;
-      for (let index = 0; index < starID.length; index++) {
-        $.activeId = starID[index]['starId'];
-        console.log(`开始 【${$.activeId}】 星推官，加入店铺会员任务不做\n`);
-        $.j = index;
-        $.times = 0;
-        await JD_XTG(true);
-        await indexInfo();//抽奖
-      }
-      await showMsg();
-    }
-  }
-  if ($.isNode() && allMsg) {
-    await notify.sendNotify($.name, allMsg);
-  }
   //助力功能
   for (let index = 0; index < starID.length; index++) {
     $.invites = [];
@@ -133,11 +80,12 @@ const JD_API_HOST = "https://guardianstarjd.m.jd.com/star";
     }
   }
   if (!cookiesArr || cookiesArr.length < 2) return
+  console.log(`开始自己账号内部互助\n\n`);
   for (let v = 0; v < cookiesArr.length; v++) {
     cookie = cookiesArr[v];
     $.index = v + 1;
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-    console.log(`自己账号内部互助\n\n`);
+
     for (let oneAppId in $.allShareId) {
       let oneAcHelpList = $.allShareId[oneAppId];
       for (let j = 0; j < oneAcHelpList.length; j++) {
@@ -382,58 +330,6 @@ function doSupport(shareId) {
             if (data['data']['status'] === 4) $.item['max'] = true;
           }
           console.log(`助力结果:${JSON.stringify(data)}\n`);
-        }
-      } catch (e) {
-        $.logErr(e, resp);
-      } finally {
-        resolve();
-      }
-    });
-  });
-}
-function indexInfo() {
-  return new Promise(async (resolve) => {
-    const options = taskPostUrl('index/indexInfo', 'indexInfo', `starId=${$.activeId}&type=null`);
-    $.post(options, async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`);
-          console.log(`${$.name} API请求失败，请检查网路重试`);
-        } else {
-          data = JSON.parse(data);
-          if (data && data.code === 200) {
-            $.starPrizeVoList = (data.data.starPrizeVoList || []).filter(vo => vo.status === 0 && data.data.myTotalStar >= vo['starGradeNum']);
-            for (let item of $.starPrizeVoList) {
-              await lottery(item['id']);
-              // await $.wait(500);
-            }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp);
-      } finally {
-        resolve();
-      }
-    });
-  });
-}
-function lottery(id) {
-  return new Promise(async (resolve) => {
-    const options = taskPostUrl('task/lottery', 'lottery', `starId=${$.activeId}&id=${id}`);
-    $.post(options, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`);
-          console.log(`${$.name} API请求失败，请检查网路重试`);
-        } else {
-          data = JSON.parse(data);
-          if (data && data.code === 200) {
-            if (data.data && data.data.status === 1) {
-              console.log(`京东账号${$.index} ${$.nickName || $.UserName}恭喜中奖\n【${$.activeId}】星推官抽奖详情${JSON.stringify(data)}\n`);
-            } else {
-              console.log(`【${$.activeId}】星推官抽奖：未中奖\n`)
-            }
-          }
         }
       } catch (e) {
         $.logErr(e, resp);
