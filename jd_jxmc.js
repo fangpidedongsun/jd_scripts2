@@ -1,7 +1,4 @@
 /*
-* author:star
-* */
-/*
 惊喜牧场
 更新时间：2021-6-8
 活动入口：京喜APP-我的-京喜牧场
@@ -10,17 +7,17 @@
 ============Quantumultx===============
 [task_local]
 #惊喜牧场
-20 0-23/3 * * * https://jdsharedresourcescdn.azureedge.net/jdresource/jd_jxmc.js, tag=惊喜牧场, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true
+20 0-23/3 * * * jd_jxmc.js, tag=惊喜牧场, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true
 
 ================Loon==============
 [Script]
-cron "20 0-23/3 * * *" script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_jxmc.js,tag=惊喜牧场
+cron "20 0-23/3 * * *" script-path=jd_jxmc.js,tag=惊喜牧场
 
 ===============Surge=================
-惊喜牧场 = type=cron,cronexp="20 0-23/3 * * *",wake-system=1,timeout=3600,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_jxmc.js
+惊喜牧场 = type=cron,cronexp="20 0-23/3 * * *",wake-system=1,timeout=3600,script-path=jd_jxmc.js
 
 ============小火箭=========
-惊喜牧场 = type=cron,script-path=https://jdsharedresourcescdn.azureedge.net/jdresource/jd_jxmc.js, cronexpr="20 0-23/3 * * *", timeout=3600, enable=true
+惊喜牧场 = type=cron,script-path=jd_jxmc.js, cronexpr="20 0-23/3 * * *", timeout=3600, enable=true
  */
 // prettier-ignore
 !function (t, r) { "object" == typeof exports ? module.exports = exports = r() : "function" == typeof define && define.amd ? define([], r) : t.CryptoJS = r() }(this, function () {
@@ -35,7 +32,7 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 $.inviteCodeList = [];
 let cookiesArr = [];
-$.appId = 10001;
+$.appId = 10028;
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -132,8 +129,9 @@ async function pasture() {
       await $.wait(2000);
       if (j === 2) {
         //割草
-        console.log(`\n开始进行10次割草`);
-        for (let i = 0; i < 10; i++) {
+        console.log(`\n开始进行割草`);
+        $.runFlag = true;
+        for (let i = 0; i < 30 && $.runFlag; i++) {
           $.mowingInfo = {};
           console.log(`开始第${i + 1}次割草`);
           await takeGetRequest('mowing');
@@ -145,9 +143,11 @@ async function pasture() {
             await $.wait(5000);
           }
         }
+
         //横扫鸡腿
-        console.log(`\n开始进行10次横扫鸡腿`);
-        for (let i = 0; i < 10; i++) {
+        $.runFlag = true;
+        console.log(`\n开始进行横扫鸡腿`);
+        for (let i = 0; i < 30 && $.runFlag; i++) {
           console.log(`开始第${i + 1}次横扫鸡腿`);
           await takeGetRequest('jump');
           await $.wait(2000);
@@ -327,8 +327,14 @@ function dealReturn(type, data) {
       data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
       if (data.ret === 0) {
         $.mowingInfo = data.data;
-        console.log(`获得金币：${ $.mowingInfo.addcoins || $.mowingInfo.addcoin }`)
-        if (!$.mowingInfo.addcoins && !$.mowingInfo.addcoin) console.log(`请检查【新手指导任务-割草与割鸡腿】是否已手动完成\n`);
+        let add = ($.mowingInfo.addcoins || $.mowingInfo.addcoin) ? ($.mowingInfo.addcoins || $.mowingInfo.addcoin) : 0;
+        console.log(`获得金币：${add}`);
+        if(Number(add) >0 ){
+          $.runFlag = true;
+        }else{
+          $.runFlag = false;
+          console.log(`未获得金币暂停${type}`);
+        }
       }
       break;
     case 'GetSelfResult':
