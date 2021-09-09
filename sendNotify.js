@@ -1,7 +1,5 @@
-/*
- Last Modified time: 2021-4-3 16:00:54
- */
 /**
+ * @Last Modified time: 2021-9-7 15:00:54
  * sendNotify 推送通知功能
  * @param text 通知头
  * @param desp 通知体
@@ -9,9 +7,11 @@
  * @param author 作者仓库等信息  例：`本脚本免费使用 By：xxx`
  * @returns {Promise<unknown>}
  */
-const querystring = require("querystring");
+
+const querystring = require('querystring');
+const fs = require('fs');
 const $ = new Env();
-const timeout = 15000;//超时时间(单位毫秒)
+const timeout = 15000; //超时时间(单位毫秒)
 // =======================================微信server酱通知设置区域===========================================
 //此处填你申请的SCKEY.
 //(环境变量名 PUSH_KEY)
@@ -22,7 +22,8 @@ let SCKEY = '';
 let BARK_PUSH = '';
 //BARK app推送铃声,铃声列表去APP查看复制填写
 let BARK_SOUND = '';
-
+//BARK app推送消息的分组, 默认为"QingLong"
+let BARK_GROUP = 'jd_scripts';
 
 // =======================================telegram机器人通知设置区域===========================================
 //此处填你telegram bot 的Token，telegram机器人通知推送必填项.例如：1077xxx4424:AAFjv0FcqxxxxxxgEMGfi22B4yh15R5uw
@@ -32,11 +33,11 @@ let TG_BOT_TOKEN = '';
 //(环境变量名 TG_USER_ID)
 let TG_USER_ID = '';
 //tg推送HTTP代理设置(不懂可忽略,telegram机器人通知推送功能中非必填)
-let TG_PROXY_HOST = '';//例如:127.0.0.1(环境变量名:TG_PROXY_HOST)
-let TG_PROXY_PORT = '';//例如:1080(环境变量名:TG_PROXY_PORT)
-let TG_PROXY_AUTH = '';//tg代理配置认证参数
+let TG_PROXY_HOST = ''; //例如:127.0.0.1(环境变量名:TG_PROXY_HOST)
+let TG_PROXY_PORT = ''; //例如:1080(环境变量名:TG_PROXY_PORT)
+let TG_PROXY_AUTH = ''; //tg代理配置认证参数
 //Telegram api自建的反向代理地址(不懂可忽略,telegram机器人通知推送功能中非必填),默认tg官方api(环境变量名:TG_API_HOST)
-let TG_API_HOST = 'api.telegram.org'
+let TG_API_HOST = 'api.telegram.org';
 // =======================================钉钉机器人通知设置区域===========================================
 //此处填你钉钉 bot 的webhook，例如：5a544165465465645d0f31dca676e7bd07415asdasd
 //(环境变量名 DD_BOT_TOKEN)
@@ -72,6 +73,16 @@ let IGOT_PUSH_KEY = '';
 let PUSH_PLUS_TOKEN = '';
 let PUSH_PLUS_USER = '';
 
+// =======================================go-cqhttp通知设置区域===========================================
+// Doc https://docs.go-cqhttp.org/api/
+let GO_CQHTTP_URL = '' // 127.0.0.1:5702
+let GO_CQHTTP_QQ = '' // 接收消息QQ或群
+let GO_CQHTTP_METHOD = '' // send_private_msg or send_group_msg
+let GO_CQHTTP_SCRIPTS = '' // 分开推送的脚本名
+let GO_CQHTTP_LINK = '' // 外网扫码地址
+let qqnumber = ''
+let remarks = ''
+
 //==========================云端环境变量的判断与接收=========================
 if (process.env.PUSH_KEY) {
   SCKEY = process.env.PUSH_KEY;
@@ -85,21 +96,23 @@ if (process.env.QQ_MODE) {
   QQ_MODE = process.env.QQ_MODE;
 }
 
-
 if (process.env.BARK_PUSH) {
   if(process.env.BARK_PUSH.indexOf('https') > -1 || process.env.BARK_PUSH.indexOf('http') > -1) {
     //兼容BARK自建用户
-    BARK_PUSH = process.env.BARK_PUSH
+    BARK_PUSH = process.env.BARK_PUSH;
   } else {
-    BARK_PUSH = `https://api.day.app/${process.env.BARK_PUSH}`
+    BARK_PUSH = `https://api.day.app/${process.env.BARK_PUSH}`;
   }
   if (process.env.BARK_SOUND) {
-    BARK_SOUND = process.env.BARK_SOUND
+    BARK_SOUND = process.env.BARK_SOUND;
+  }
+  if (process.env.BARK_GROUP) {
+    BARK_GROUP = process.env.BARK_GROUP;
   }
 } else {
   if(BARK_PUSH && BARK_PUSH.indexOf('https') === -1 && BARK_PUSH.indexOf('http') === -1) {
     //兼容BARK本地用户只填写设备码的情况
-    BARK_PUSH = `https://api.day.app/${BARK_PUSH}`
+    BARK_PUSH = `https://api.day.app/${BARK_PUSH}`;
   }
 }
 if (process.env.TG_BOT_TOKEN) {
@@ -129,7 +142,7 @@ if (process.env.QYWX_AM) {
 }
 
 if (process.env.IGOT_PUSH_KEY) {
-  IGOT_PUSH_KEY = process.env.IGOT_PUSH_KEY
+  IGOT_PUSH_KEY = process.env.IGOT_PUSH_KEY;
 }
 
 if (process.env.PUSH_PLUS_TOKEN) {
@@ -148,28 +161,79 @@ if (process.env.PUSH_PLUS_USER) {
  * @param author 作者仓库等信息  例：`本脚本免费使用 By：xxxx`
  * @returns {Promise<unknown>}
  */
-async function sendNotify(text, desp, params = {}, author = '\n\n仅供用于学习 https://t.me/jdfruit') {
-  //提供6种通知
-  desp += author;//增加作者信息，防止被贩卖等
-  await Promise.all([
-    serverNotify(text, desp),//微信server酱
-    pushPlusNotify(text, desp)//pushplus(推送加)
-  ])
-  //由于上述两种微信通知需点击进去才能查看到详情，故text(标题内容)携带了账号序号以及昵称信息，方便不点击也可知道是哪个京东哪个活动
-  text = text.match(/.*?(?=\s?-)/g) ? text.match(/.*?(?=\s?-)/g)[0] : text;
-  await Promise.all([
-    BarkNotify(text, desp, params),//iOS Bark APP
-    tgBotNotify(text, desp),//telegram 机器人
-    ddBotNotify(text, desp),//钉钉机器人
-    qywxBotNotify(text, desp), //企业微信机器人
-    qywxamNotify(text, desp), //企业微信应用消息推送
-    iGotNotify(text, desp, params),//iGot
-    //CoolPush(text, desp)//QQ酷推
-  ])
+
+if (process.env.GO_CQHTTP_URL) {
+  GO_CQHTTP_URL = process.env.GO_CQHTTP_URL;
+}
+if (process.env.GO_CQHTTP_QQ) {
+  GO_CQHTTP_QQ = process.env.GO_CQHTTP_QQ;
+}
+if (process.env.GO_CQHTTP_METHOD) {
+  GO_CQHTTP_METHOD = process.env.GO_CQHTTP_METHOD;
+}
+if (process.env.GO_CQHTTP_SCRIPTS) {
+  GO_CQHTTP_SCRIPTS = process.env.GO_CQHTTP_SCRIPTS;
+}
+if (process.env.GO_CQHTTP_LINK) {
+  GO_CQHTTP_LINK = process.env.GO_CQHTTP_LINK;
 }
 
+let end_txt = "仅供用于学习";
+if (process.env.END_TXT) {
+  end_txt = process.env.END_TXT;
+}
+let tg_only = false;
+if (process.env.TG_ONLY) {
+  tg_only = process.env.TG_ONLY;
+}
+
+async function sendNotify(text, desp, params = {}, author = '\n\n' + end_txt) {
+  //提供6种通知
+  desp += author;//增加作者信息，防止被贩卖等
+  try {
+    fs.accessSync('./tools/account.json')
+    remarks = JSON.parse(fs.readFileSync('./tools/account.json').toString())
+    qqnumber = JSON.parse(fs.readFileSync('./tools/account.json').toString())
+  } catch (e) {
+  }
+  if (remarks) {
+    for (let account of remarks) {
+      if (account['pt_pin'] && account['qqnumber'] && account['remarks'] ){
+        text = text.replace(new RegExp(account['pt_pin'], 'gm'), account['remarks'])
+        desp = desp.replace(new RegExp(account['pt_pin'], 'gm'), account['remarks'])    
+      }
+      
+    }
+  }
+  if (tg_only) {
+    text = text.match(/.*?(?=\s?-)/g) ? text.match(/.*?(?=\s?-)/g)[0] : text;
+    await Promise.all([
+      tgBotNotify(text, desp),//telegram 机器人
+    ])
+  } else {
+    await Promise.all([
+      serverNotify(text, desp), //微信server酱
+      pushPlusNotify(text, desp) //pushplus(推送加)
+    ])
+    //由于上述两种微信通知需点击进去才能查看到详情，故text(标题内容)携带了账号序号以及昵称信息，方便不点击也可知道是哪个京东哪个活动
+    text = text.match(/.*?(?=\s?-)/g) ? text.match(/.*?(?=\s?-)/g)[0] : text;
+    await Promise.all([
+      BarkNotify(text, desp, params), //iOS Bark APP
+      tgBotNotify(text, desp), //telegram 机器人
+      ddBotNotify(text, desp), //钉钉机器人
+      qywxBotNotify(text, desp), //企业微信机器人
+      qywxamNotify(text, desp), //企业微信应用消息推送
+      iGotNotify(text, desp, params), //iGot
+      //CoolPush(text, desp)//QQ酷推
+      goCQhttp(text, desp)  // go-cqhttp
+    ])
+  }
+}
+
+
+
 function serverNotify(text, desp, time = 2100) {
-  return  new Promise(resolve => {
+  return new Promise(resolve => {
     if (SCKEY) {
       //微信server酱推送通知一个\n不会换行，需要两个\n才能换行，故做此替换
       desp = desp.replace(/[\n\r]/g, '\n\n');
@@ -190,7 +254,7 @@ function serverNotify(text, desp, time = 2100) {
             } else {
               data = JSON.parse(data);
               //server酱和Server酱·Turbo版的返回json格式不太一样
-              if (data.errno === 0 || data.data.errno === 0 ) {
+              if (data.errno === 0 || data.data.errno === 0) {
                 console.log('server酱发送通知消息成功🎉\n')
               } else if (data.errno === 1024) {
                 // 一分钟内发送相同的内容会触发
@@ -213,8 +277,113 @@ function serverNotify(text, desp, time = 2100) {
   })
 }
 
+function goCQhttp(text, desp) {
+  if(GO_CQHTTP_URL && GO_CQHTTP_QQ && GO_CQHTTP_METHOD) {
+    let msg = (text + '\n' + desp);
+    let recv_id = ''
+    if (GO_CQHTTP_METHOD === 'send_private_msg') {
+      recv_id = 'user_id'
+    } else if(GO_CQHTTP_METHOD === 'send_group_msg') {
+      recv_id = 'group_id'
+    }
+    let remarks = '';
+    try {
+      fs.accessSync('./tools/account.json')
+      remarks = JSON.parse(fs.readFileSync('./tools/account.json').toString())
+      qqnumber = JSON.parse(fs.readFileSync('./tools/account.json').toString())
+    } catch (e) {
+    }
+    if (remarks) {
+      for (let account of remarks) {
+        if (desp.indexOf(account['remarks']) !=-1) {qqnumber = account['qqnumber']}      
+      }
+    }
+    let expire = RegExp ("重新登录");
+    let individual = RegExp ("已可领取|已可兑换|已成熟|未选择|兑换成功|提现成功|忘了|京东资产变动|东东农场|未继续|已领取"); 
+    if((expire.test(text) === true || expire.test(desp) === true) && qqnumber) {
+      let msgs = (msg + '\n\n' + GO_CQHTTP_LINK)
+      return new Promise(resolve => {
+        $.get({
+          url: `http://${GO_CQHTTP_URL}/send_private_msg?user_id=${qqnumber}&message=${encodeURI(msgs)}`,
+        }, (err, resp, data) => {
+          try {
+            if (err) {
+              console.log(`发送通知调用API失败！！\n${err}`)
+            } else {
+              // console.log(data);
+              data = JSON.parse(data);
+              if (data.retcode === 0 && data.status === 'ok') {              
+                console.log(`go-cqhttp发送给个人通知消息成功🎉\n`)
+              } else if(data.retcode !== 0 && data.status !== 'ok' ) {
+                console.log(`go-cqhttp发送给个人通知消息异常\n${JSON.stringify(data)}`)
+                console.log(`http://${GO_CQHTTP_URL}/send_private_msg?$user_id=${qq}&message=`)
+              }
+            }
+          } catch(e) {
+            $.logErr(e, resp)
+          } finally {
+            resolve(data);
+          }
+        })
+      })
+    } else if((individual.test(text) === true || individual.test(desp) === true) && qqnumber) {
+      return new Promise(resolve => {
+        $.get({
+          url: `http://${GO_CQHTTP_URL}/send_private_msg?user_id=${qqnumber}&message=${encodeURI(msg)}`,
+        }, (err, resp, data) => {
+          try {
+            if(err) {
+              console.log(`发送通知调用API失败！！\n${err}`)
+            } else {
+              // console.log(data);
+              data = JSON.parse(data);
+              if(data.retcode === 0 && data.status === 'ok') {              
+                console.log(`go-cqhttp发送给个人通知消息成功🎉\n`)
+              } else if(data.retcode !== 0 && data.status !== 'ok' ) {
+                console.log(`go-cqhttp发送给个人通知消息异常\n${JSON.stringify(data)}`)
+                console.log(`http://${GO_CQHTTP_URL}/send_private_msg?$user_id=${qq}&message=`)
+              }
+            }
+          } catch(e) {
+            $.logErr(e, resp)
+          } finally {
+            resolve(data);
+          }
+        })
+      })
+    } else {
+      return new Promise(resolve => {
+        $.get({
+          url: `http://${GO_CQHTTP_URL}/${GO_CQHTTP_METHOD}?${recv_id}=${GO_CQHTTP_QQ}&message=${encodeURI(msg)}`,
+        }, (err, resp, data) => {
+          try {
+            if(err) {
+              console.log(`发送通知调用API失败！！\n${err}`)
+            } else {
+              // console.log(data);
+              data = JSON.parse(data);
+              if(data.retcode === 0 && data.status === 'ok') {              
+                console.log('go-cqhttp发送通知消息成功🎉\n')
+              } else if(data.retcode !== 0 && data.status !== 'ok' ) {
+                console.log(`go-cqhttp发送通知消息异常\n${JSON.stringify(data)}`)
+              }
+            }
+          } catch(e) {
+            $.logErr(e, resp)
+          } finally {
+            resolve(data);
+          }
+        })
+      })
+    }
+  } else {
+    console.log('您未提供go-cqhttp所需的GO_CQHTTP_URL、GO_CQHTTP_QQ、GO_CQHTTP_METHOD，取消QQ推送消息通知🚫\n');
+    // resolve()
+  }
+}
+
 function CoolPush(text, desp) {
-  return  new Promise(resolve => {
+  return new Promise(resolve => {
     if (QQ_SKEY) {
       let options = {
         url: `https://push.xuthus.cc/${QQ_MODE}/${QQ_SKEY}`,
@@ -287,8 +456,8 @@ function CoolPush(text, desp) {
   })
 }
 
-function BarkNotify(text, desp, params={}) {
-  return  new Promise(resolve => {
+function BarkNotify(text, desp, params = {}) {
+  return new Promise(resolve => {
     if (BARK_PUSH) {
       const options = {
         url: `${BARK_PUSH}/${encodeURIComponent(text)}/${encodeURIComponent(desp)}?sound=${BARK_SOUND}&${querystring.stringify(params)}`,
@@ -324,7 +493,7 @@ function BarkNotify(text, desp, params={}) {
 }
 
 function tgBotNotify(text, desp) {
-  return  new Promise(resolve => {
+  return new Promise(resolve => {
     if (TG_BOT_TOKEN && TG_USER_ID) {
       const options = {
         url: `https://${TG_API_HOST}/bot${TG_BOT_TOKEN}/sendMessage`,
@@ -375,7 +544,7 @@ function tgBotNotify(text, desp) {
   })
 }
 function ddBotNotify(text, desp) {
-  return  new Promise(resolve => {
+  return new Promise(resolve => {
     const options = {
       url: `https://oapi.dingtalk.com/robot/send?access_token=${DD_BOT_TOKEN}`,
       json: {
@@ -620,7 +789,7 @@ function iGotNotify(text, desp, params={}){
       if(!IGOT_PUSH_KEY_REGX.test(IGOT_PUSH_KEY)) {
         console.log('您所提供的IGOT_PUSH_KEY无效\n')
         resolve()
-        return 
+        return
       }
       const options = {
         url: `https://push.hellyw.com/${IGOT_PUSH_KEY.toLowerCase()}`,
