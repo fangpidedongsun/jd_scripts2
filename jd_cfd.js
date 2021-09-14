@@ -1,7 +1,7 @@
 /*
 京喜财富岛
 cron 5 * * * * jd_cfd.js
-更新时间：2021-7-13
+更新时间：2021-9-11
 活动入口：京喜APP-我的-京喜财富岛
 
 已支持IOS双京东账号,Node.js支持N个京东账号
@@ -37,7 +37,7 @@ $.notifyTime = $.getdata("cfd_notifyTime");
 $.result = [];
 $.shareCodes = [];
 let cookiesArr = [], cookie = '', token = '';
-let UA, UAInfo = {}
+let UA, UAInfo = {}, num
 let nowTimes;
 
 const randomCount = $.isNode() ? 3 : 3;
@@ -99,6 +99,7 @@ $.appId = 10028;
     $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
     $.canHelp = true
     UA = UAInfo[$.UserName]
+    num = 0
     if ($.shareCodes && $.shareCodes.length) {
       console.log(`\n自己账号内部循环互助\n`);
       for (let j = 0; j < $.shareCodes.length && $.canHelp; j++) {
@@ -191,10 +192,10 @@ async function cfd() {
     }
 
     //合成珍珠
-    if (nowTimes.getHours() >= 5) {
-      await $.wait(2000)
-      await composeGameState()
-    }
+    // if (nowTimes.getHours() >= 5) {
+    //   await $.wait(2000)
+    //   await composeGameState()
+    // }
 
     //接待贵宾
     console.log(`接待贵宾`)
@@ -1202,11 +1203,12 @@ function helpByStage(shareCodes) {
             $.canHelp = false
           } else if (data.iRet === 2229 || data.sErrMsg === '助力失败啦~') {
             console.log(`助力失败：您的账号或被助力的账号可能已黑，请联系客服`)
-            // $.canHelp = false
+            num++
+            if (num === 5) $.canHelp = false
           } else if (data.iRet === 2190 || data.sErrMsg === '达到助力上限') {
             console.log(`助力失败：${data.sErrMsg}`)
             $.delcode = true
-          } else{
+          } else {
             console.log(`助力失败：${data.sErrMsg}`)
           }
         }

@@ -345,7 +345,7 @@ function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
     $.get({
-      url: `https://cdn.nz.lu/api/health/${randomCount}`,
+      url: `https://cdn.nz.lu/api/heath/${randomCount}`,
       headers: {
         'Host': 'api.sharecode.ga'
       },

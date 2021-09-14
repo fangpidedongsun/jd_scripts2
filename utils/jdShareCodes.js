@@ -69,4 +69,3 @@ for (let key in shareCodesMap) {
     exports[key][i] = shareCodesMap[key].sort(() => Math.random() - 0.5).join('@');
   }
 }
-
