@@ -4,5 +4,4 @@
 
 [Secrets环境变量](/backUp/githubAction.md)
 
-此库以被封，我会在q群235081474重新发布新库
 
