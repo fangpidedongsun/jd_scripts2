@@ -1,12 +1,12 @@
 /*
-update date ：2021.07.15
+update date ：2021.11.1
 #自定义互助码变量，仅支持单个互助码
 export TYT_PACKETID=""
  [task_local]
 #柠檬推一推
-0 6-23/4 * * * jd_tyt.js, tag=柠檬推一推, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0 0-23/3 * * * http://nm66.top/jd_tyt.js, tag=柠檬推一推, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 注意：助力码每天会变，旧的不可用。
-助力逻辑：优先助力互助码变量，再给我助力
+助力逻辑：优先助力互助码变量，北京时间15点后默认会助力作者，介意请勿运行！
 */
 const $ = new Env('柠檬推一推');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -61,14 +61,14 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         continue
       }
       await initateCoinDozer() //开团
-      await $.wait(2000)
+      await $.wait(6000)
       if ($.canRun) {
         await getCoinDozerInfo()
-        await $.wait(1000)
+        await $.wait(3000)
         await coinDozerBackFlow()
-        await $.wait(1000)
+        await $.wait(3000)
         await helpCoinDozer(packetId)
-        await $.wait(500)
+        await $.wait(5000)
         if (tytpacketId !== '') {
           await tythelp(tytpacketId)
         }
@@ -83,7 +83,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
         for (let j = 0; j < $.authorCode.length; j++) {
           let tytpacketId = $.authorCode[j];
           await tythelp(tytpacketId)
-          await $.wait(1000)
+          await $.wait(5000)
         }
       }
     }
@@ -99,7 +99,7 @@ function initateCoinDozer() {
   return new Promise(async (resolve) => {
     let options = {
       url: `https://api.m.jd.com/?t=1623066557140`,
-      body: `functionId=initiateCoinDozer&body={"actId":"287eb90945e049129d76dd7e85dc0313","channel":"coin_dozer","antiToken":"ec14brrjlsu8u4lhmia162581607334284f3~NmZeSyVEbFNSd3V7dldUAH92AwhlRHpTBiUjb35DFm5vLUROOBEzLUF7G28iAAFBKBgVFA1EPwIVKDclGENXbm8iVlQiAwpTTx1lKSsTCG5vfmsaDUR6LUEnG29%2BPU8LLyAADWQFNUgHcnZ4dlhZC3khBAxhUDIVBnJzf3dZC0M7LENkc0oKUwoyKhFmWzEQOTZCXQ1Eei1BKTQ5GENXbm80Qks5ATkdB28tKWoCAl8RZhtkcxY4LUF7G29rPU8eEWZHTA1EbC1BKTM5NBJXbm9oaxohDwpTWR1lf3RNWR56aAcUYUpvRD9jOm9oQwhWKTdQGmtEZgQXcWVhZgIeEHdmRQsmBSESWyAsISMVAkcvN0BeIlNlFgouLiQzFFpRI3VWUD0KdF1BImV3ZlQHXnU1UEFoADUYFCcvLCgQW0h8cgUNaVdgQVRydHl1BxpadWYbGjUVOFNZYzQ0NRkcRy59FRRzDyVTWWN2b2hDB1suZg0aaF9vSEE8%7C~1626269234856~1~20201218~eyJ2aXdlIjoiMCIsImJhaW4iOnsiaWMiOiIwIiwibGUiOiI3NSIsImN0IjoiaSIsImR0IjoiMiJ9fQ%3D%3D~2~472~tix5%7Cgw57a%3B554ci-6n%2C81%2C%2C%3B751r-%2C%2C%2C%3B358-6o%2C81%2C3t%2Cj%3Bb53-6o%2C81%2C3t%2Cj%3B050-6o%2C81%2C3t%2Cj%3Bdoei%3A%2C1%2C186%2C186%2C0%2C0%2C9%2C22%2C3%2C15%3Bdmei%3A%2C1%2C302%2C0%2C-2%2C0%2C-2%2C0%2C-2%2C0%3Bemc%3A%2C5%3A1%3Bemmm%3A%3Bemcf%3A%2C5%3A1%3Bivli%3A%3Biivl%3A%3Bivcvj%3A%3Bscvje%3A%3Bewhi%3A%2C5%3A187-46%3B1626269222397%2C1626269234855%2C0%2C1%2C6%2C6%2C0%2C1%2C0%2C0%2C0%3Ba3bp","referer":"-1","frontendInitStatus":"s"}&appid=megatron&client=android&clientVersion=9&t=1626269234860&networkType=wifi&eid=eidAecfa8121c7s1QgSzJyiJRFuXovji/QEn20IEtJ8WEfBsxVlLBBlDx1NDeWXp7i+1qklWZQtVP/M+tndxJj/uR/SSHj2G7vN0F2lfP0e9ux8UHlNC&fp=-1&frontendInitStatus=s&uuid=8363532363230343238303836333-43D2468336563316936636265356&osVersion=9&d_brand=Xiaomi&d_model=MI 8&agent=-1&pageClickKey=-1&screen=393*818&platform=3&lang=zh_CN&eu=8363532363230343238303836333&fv=43D2468336563316936636265356`,
+      body: `functionId=initiateCoinDozer&body={"actId":"d5a8c7198ee54de093d2adb04089d3ec","channel":"coin_dozer","antiToken":"ec14brrjlsu8u4lhmia162581607334284f3~NmZeSyVEbFNSd3V7dldUAH92AwhlRHpTBiUjb35DFm5vLUROOBEzLUF7G28iAAFBKBgVFA1EPwIVKDclGENXbm8iVlQiAwpTTx1lKSsTCG5vfmsaDUR6LUEnG29%2BPU8LLyAADWQFNUgHcnZ4dlhZC3khBAxhUDIVBnJzf3dZC0M7LENkc0oKUwoyKhFmWzEQOTZCXQ1Eei1BKTQ5GENXbm80Qks5ATkdB28tKWoCAl8RZhtkcxY4LUF7G29rPU8eEWZHTA1EbC1BKTM5NBJXbm9oaxohDwpTWR1lf3RNWR56aAcUYUpvRD9jOm9oQwhWKTdQGmtEZgQXcWVhZgIeEHdmRQsmBSESWyAsISMVAkcvN0BeIlNlFgouLiQzFFpRI3VWUD0KdF1BImV3ZlQHXnU1UEFoADUYFCcvLCgQW0h8cgUNaVdgQVRydHl1BxpadWYbGjUVOFNZYzQ0NRkcRy59FRRzDyVTWWN2b2hDB1suZg0aaF9vSEE8%7C~1626269234856~1~20201218~eyJ2aXdlIjoiMCIsImJhaW4iOnsiaWMiOiIwIiwibGUiOiI3NSIsImN0IjoiaSIsImR0IjoiMiJ9fQ%3D%3D~2~472~tix5%7Cgw57a%3B554ci-6n%2C81%2C%2C%3B751r-%2C%2C%2C%3B358-6o%2C81%2C3t%2Cj%3Bb53-6o%2C81%2C3t%2Cj%3B050-6o%2C81%2C3t%2Cj%3Bdoei%3A%2C1%2C186%2C186%2C0%2C0%2C9%2C22%2C3%2C15%3Bdmei%3A%2C1%2C302%2C0%2C-2%2C0%2C-2%2C0%2C-2%2C0%3Bemc%3A%2C5%3A1%3Bemmm%3A%3Bemcf%3A%2C5%3A1%3Bivli%3A%3Biivl%3A%3Bivcvj%3A%3Bscvje%3A%3Bewhi%3A%2C5%3A187-46%3B1626269222397%2C1626269234855%2C0%2C1%2C6%2C6%2C0%2C1%2C0%2C0%2C0%3Ba3bp","referer":"-1","frontendInitStatus":"s"}&appid=megatron&client=android&clientVersion=9&t=1626269234860&networkType=wifi&eid=eidAecfa8121c7s1QgSzJyiJRFuXovji/QEn20IEtJ8WEfBsxVlLBBlDx1NDeWXp7i+1qklWZQtVP/M+tndxJj/uR/SSHj2G7vN0F2lfP0e9ux8UHlNC&fp=-1&frontendInitStatus=s&uuid=8363532363230343238303836333-43D2468336563316936636265356&osVersion=9&d_brand=Xiaomi&d_model=MI 8&agent=-1&pageClickKey=-1&screen=393*818&platform=3&lang=zh_CN&eu=8363532363230343238303836333&fv=43D2468336563316936636265356`,
       headers: {
         "Origin": "https://pushgold.jd.com",
         "Host": "api.m.jd.com",
@@ -134,7 +134,7 @@ function tythelp(tytpacketId) {
   return new Promise(async (resolve) => {
     let options = {
       url: `https://api.m.jd.com/?t=1623066557140`,
-      body: `functionId=helpCoinDozer&appid=station-soa-h5&client=H5&clientVersion=1.0.0&t=1623120183787&body={"actId":"287eb90945e049129d76dd7e85dc0313","channel":"coin_dozer","antiToken":"mmkajtm9eqonssy6xoi1623119406463ic84~NmZeSyVEbFNSd3V+dVNdA3pxAABkRHpTBiUjb35DFm5vLUROOBEzLUF7G28iAAFBKBgVFA1EPwIVKDclGENXbm8iVlQiAwpTTx1lKSsTCG5vfmsaDUR6LUEnG29+PU9ReSdSWTNTNxICI3V0dlYOV3p0Bwg3UW9IVnd+KSdUC1E3KQFkc0oKUwoyKhFmWzEQOTZCXQ1Eei1BKTQ5GENXbm80Qks5ATkdB28tKWoCAl8RZhtkcxY4LUF7G29rPU8eEWZHTA1EbC1BKTM5NBJXbm9oaxohDwpTWR1lf3RNWR56aAcUYUpnQFcdZTBmTU9XKSBEX3NcdEEFMDdvaEMOQW9+FV82CDAUAXhzfTEDXV07I0VUZx49F1MucyosBwIHeTFSDycPIlNPYyRvfkMDQCwiBFo1VWFHBzsuPnVZB185dQEKYlZkRFR3cnVxUAFFf3QVFHMCJR9Be2U3MwkVQC8nWBp9RD8CQXtlfGZNT1gkJxUCc19vSFpjOg==|~1623120183785~1~20201218~eyJ2aXdlIjoiMCIsImJhaW4iOnt9fQ==~2~281~1pl4|5563f-70,aa,,;751e-,,,;359-70,aa,40,u;b512-70,aa,40,u;058-70,aa,40,u;doei:,1,0,0,0,0,1000,-1000,1000,-1000;dmei:,1,0,0,1000,-1000,1000,-1000,1000,-1000;emc:,5:1;emmm:;emcf:,5:1;ivli:;iivl:;ivcvj:;scvje:;ewhi:,5:197-49;1623120175774,1623120183784,0,1,5,5,0,1,0,0,0;u5ge","referer":"-1","frontendInitStatus":"s","packetId":"${tytpacketId}","helperStatus":"0"}&_ste=1&_stk=appid,body,client,clientVersion,functionId,t&h5st=20210608104303790;8489907903583162;10005;tk01w89681aa9a8nZDdIanIyWnVuWFLK4gnqY+05WKcPY3NWU2dcfa73B7PBM7ufJEN0U+4MyHW5N2mT/RNMq72ycJxH;7e6b956f1a8a71b269a0038bbb4abd24bcfb834a88910818cf1bdfc55b7b96e5`,
+      body: `functionId=helpCoinDozer&appid=station-soa-h5&client=H5&clientVersion=1.0.0&t=1623120183787&body={"actId":"d5a8c7198ee54de093d2adb04089d3ec","channel":"coin_dozer","antiToken":"mmkajtm9eqonssy6xoi1623119406463ic84~NmZeSyVEbFNSd3V+dVNdA3pxAABkRHpTBiUjb35DFm5vLUROOBEzLUF7G28iAAFBKBgVFA1EPwIVKDclGENXbm8iVlQiAwpTTx1lKSsTCG5vfmsaDUR6LUEnG29+PU9ReSdSWTNTNxICI3V0dlYOV3p0Bwg3UW9IVnd+KSdUC1E3KQFkc0oKUwoyKhFmWzEQOTZCXQ1Eei1BKTQ5GENXbm80Qks5ATkdB28tKWoCAl8RZhtkcxY4LUF7G29rPU8eEWZHTA1EbC1BKTM5NBJXbm9oaxohDwpTWR1lf3RNWR56aAcUYUpnQFcdZTBmTU9XKSBEX3NcdEEFMDdvaEMOQW9+FV82CDAUAXhzfTEDXV07I0VUZx49F1MucyosBwIHeTFSDycPIlNPYyRvfkMDQCwiBFo1VWFHBzsuPnVZB185dQEKYlZkRFR3cnVxUAFFf3QVFHMCJR9Be2U3MwkVQC8nWBp9RD8CQXtlfGZNT1gkJxUCc19vSFpjOg==|~1623120183785~1~20201218~eyJ2aXdlIjoiMCIsImJhaW4iOnt9fQ==~2~281~1pl4|5563f-70,aa,,;751e-,,,;359-70,aa,40,u;b512-70,aa,40,u;058-70,aa,40,u;doei:,1,0,0,0,0,1000,-1000,1000,-1000;dmei:,1,0,0,1000,-1000,1000,-1000,1000,-1000;emc:,5:1;emmm:;emcf:,5:1;ivli:;iivl:;ivcvj:;scvje:;ewhi:,5:197-49;1623120175774,1623120183784,0,1,5,5,0,1,0,0,0;u5ge","referer":"-1","frontendInitStatus":"s","packetId":"${tytpacketId}","helperStatus":"0"}&_ste=1&_stk=appid,body,client,clientVersion,functionId,t&h5st=20210608104303790;8489907903583162;10005;tk01w89681aa9a8nZDdIanIyWnVuWFLK4gnqY+05WKcPY3NWU2dcfa73B7PBM7ufJEN0U+4MyHW5N2mT/RNMq72ycJxH;7e6b956f1a8a71b269a0038bbb4abd24bcfb834a88910818cf1bdfc55b7b96e5`,
       headers: {
         "Origin": "https://pushgold.jd.com",
         "Host": "api.m.jd.com",
@@ -167,7 +167,7 @@ function coinDozerBackFlow() {
   return new Promise(async (resolve) => {
     let options = {
       url: `https://api.m.jd.com/?t=1623066557140`,
-      body: `functionId=coinDozerBackFlow&body={"actId":"287eb90945e049129d76dd7e85dc0313","channel":"coin_dozer","antiToken":"","referer":"-1","frontendInitStatus":"s"}&appid=megatron&client=android&clientVersion=9&t=1627920132339&networkType=wifi&eid=eidAecfa8121c7s1QgSzJyiJRFuXovji/QEn20IEtJ8WEfBsxVlLBBlDx1NDeWXp7i+1qklWZQtVP/M+tndxJj/uR/SSHj2G7vN0F2lfP0e9ux8UHlNC&fp=-1&frontendInitStatus=s&uuid=8363532363230343238303836333-43D2468336563316936636265356&osVersion=9&d_brand=Xiaomi&d_model=MI 8&agent=-1&pageClickKey=-1&screen=393*818&platform=3&lang=zh_CN&eu=8363532363230343238303836333&fv=43D2468336563316936636265356`,
+      body: `functionId=coinDozerBackFlow&body={"actId":"d5a8c7198ee54de093d2adb04089d3ec","channel":"coin_dozer","antiToken":"","referer":"-1","frontendInitStatus":"s"}&appid=megatron&client=android&clientVersion=9&t=1627920132339&networkType=wifi&eid=eidAecfa8121c7s1QgSzJyiJRFuXovji/QEn20IEtJ8WEfBsxVlLBBlDx1NDeWXp7i+1qklWZQtVP/M+tndxJj/uR/SSHj2G7vN0F2lfP0e9ux8UHlNC&fp=-1&frontendInitStatus=s&uuid=8363532363230343238303836333-43D2468336563316936636265356&osVersion=9&d_brand=Xiaomi&d_model=MI 8&agent=-1&pageClickKey=-1&screen=393*818&platform=3&lang=zh_CN&eu=8363532363230343238303836333&fv=43D2468336563316936636265356`,
       headers: {
         "Origin": "https://pushgold.jd.com",
         "Host": "api.m.jd.com",
@@ -199,7 +199,7 @@ function helpCoinDozer(tytpacketId) {
   return new Promise(async (resolve) => {
     let options = {
       url: `https://api.m.jd.com/?t=1623066557140`,
-      body: `functionId=helpCoinDozer&appid=station-soa-h5&client=H5&clientVersion=1.0.0&t=1627922761739&body={"actId":"287eb90945e049129d76dd7e85dc0313","channel":"coin_dozer","antiToken":"d75b37qfowsfn740mp41627921383808x5a4~NmZeSyVEbFNSd3V6fVNfBX9wDwliRHpTBiUjb35DFm5vLUROOBEzLUF7G28iAAFBKBgVFA1EPwIVKDclGENXbm8iVlQiAwpTTx1lKSsTCG5vfmsaDUR6LUEnG29%2BPU8HeCVVCDQHNElTeHB7fVFVUyhyDlllU2cXUSJ3LCdWWlR7fU1kc0oKUwoyKhFmWzEQOTZCXQ1Eei1BKTQ5GENXbm80Qks5ATkdB28tKWoCAl8RZhtkcxY4LUF7G29rPU8eEWZHTA1EbC1BKTM5NBJXbm9oaxohDwpTWR1lf3RNWR56aAcUYUpvQD9jOm9oQwhWKTdQGmtEZkcKNWVhZgIeEHdmQU0kUGYfVjclKTUFFF17KVsLJRYwGVU1InUrCBUCfXFPC2MTdF1BImV3ZlMKQSk%2BDg8wAT5DBDdzPj0KXlB8cgUPaFRnQltyf31zGQBcdGYbGjUVOFNZYy4vNhlUUS43FRRzDyVTWWN2b2hDB1suZg0aaF9vSEE8%7C~1627922761730~1~20201218~eyJ2aXdlIjoiMCIsImJhaW4iOnsiaWMiOiIxIiwibGUiOiI5NSIsImN0IjoiaSIsImR0IjoiaSJ9fQ%3D%3D~4~475~siip%7C554yw-7f%2C85%2C%2C%3B753j-%2C%2C%2C%3B356-7f%2C85%2C4k%2Cn%3Bb58-7f%2C85%2C4k%2Cn%3B050-7f%2C85%2C4k%2Cn%3Bgw13b%3Bgwji5%3B552py-6q%2C83%2C%2C%3B752r-%2C%2C%2C%3Bb5a-6r%2C83%2Cm%2C-1%3Bbd1-6r%2C83%2Cm%2C-1%3B051-6r%2C83%2Cm%2C-1%3Bdoei%3A%2C1%2C647%2C647%2C0%2C0%2C-11%2C19%2C-12%2C33%3Bdmei%3A%2C1%2C898%2C0%2C-7%2C1%2C-7%2C1%2C-7%2C1%3Bemc%3A%2C5%3A2%2Cd%3A1%3Bemmm%3A%3Bemcf%3A%2C5%3A2%2Cd%3A1%2C5%3A0%3Bivli%3A%3Biivl%3A%3Bivcvj%3A%3Bscvje%3A%3Bewhi%3A%2C5%3A187-46%3B1627922724803%2C1627922761727%2C0%2C1%2C12%2C12%2C0%2C3%2C0%2C0%2C0%3Bw1rv","referer":"-1","frontendInitStatus":"s","packetId":"${tytpacketId}"}&_ste=1&_stk=appid,body,client,clientVersion,functionId,t&h5st=20210803004601741%3B9832466289341162%3B10005%3Btk01wb2581ba2a8ndXcyN0dBc2lmOdBKB2j6AmZhqiMBL1xbV3unOkVbDl2xKYdsB%2ByLyUDNYeOBhsA4b316%2B1cdS2VW%3Bc7520ffaa8ad8d7cdb6b593d33aa37079c3d6a678a12ad5fb40aa1cde0787363`,
+      body: `functionId=helpCoinDozer&appid=station-soa-h5&client=H5&clientVersion=1.0.0&t=1627922761739&body={"actId":"d5a8c7198ee54de093d2adb04089d3ec","channel":"coin_dozer","antiToken":"d75b37qfowsfn740mp41627921383808x5a4~NmZeSyVEbFNSd3V6fVNfBX9wDwliRHpTBiUjb35DFm5vLUROOBEzLUF7G28iAAFBKBgVFA1EPwIVKDclGENXbm8iVlQiAwpTTx1lKSsTCG5vfmsaDUR6LUEnG29%2BPU8HeCVVCDQHNElTeHB7fVFVUyhyDlllU2cXUSJ3LCdWWlR7fU1kc0oKUwoyKhFmWzEQOTZCXQ1Eei1BKTQ5GENXbm80Qks5ATkdB28tKWoCAl8RZhtkcxY4LUF7G29rPU8eEWZHTA1EbC1BKTM5NBJXbm9oaxohDwpTWR1lf3RNWR56aAcUYUpvQD9jOm9oQwhWKTdQGmtEZkcKNWVhZgIeEHdmQU0kUGYfVjclKTUFFF17KVsLJRYwGVU1InUrCBUCfXFPC2MTdF1BImV3ZlMKQSk%2BDg8wAT5DBDdzPj0KXlB8cgUPaFRnQltyf31zGQBcdGYbGjUVOFNZYy4vNhlUUS43FRRzDyVTWWN2b2hDB1suZg0aaF9vSEE8%7C~1627922761730~1~20201218~eyJ2aXdlIjoiMCIsImJhaW4iOnsiaWMiOiIxIiwibGUiOiI5NSIsImN0IjoiaSIsImR0IjoiaSJ9fQ%3D%3D~4~475~siip%7C554yw-7f%2C85%2C%2C%3B753j-%2C%2C%2C%3B356-7f%2C85%2C4k%2Cn%3Bb58-7f%2C85%2C4k%2Cn%3B050-7f%2C85%2C4k%2Cn%3Bgw13b%3Bgwji5%3B552py-6q%2C83%2C%2C%3B752r-%2C%2C%2C%3Bb5a-6r%2C83%2Cm%2C-1%3Bbd1-6r%2C83%2Cm%2C-1%3B051-6r%2C83%2Cm%2C-1%3Bdoei%3A%2C1%2C647%2C647%2C0%2C0%2C-11%2C19%2C-12%2C33%3Bdmei%3A%2C1%2C898%2C0%2C-7%2C1%2C-7%2C1%2C-7%2C1%3Bemc%3A%2C5%3A2%2Cd%3A1%3Bemmm%3A%3Bemcf%3A%2C5%3A2%2Cd%3A1%2C5%3A0%3Bivli%3A%3Biivl%3A%3Bivcvj%3A%3Bscvje%3A%3Bewhi%3A%2C5%3A187-46%3B1627922724803%2C1627922761727%2C0%2C1%2C12%2C12%2C0%2C3%2C0%2C0%2C0%3Bw1rv","referer":"-1","frontendInitStatus":"s","packetId":"${tytpacketId}"}&_ste=1&_stk=appid,body,client,clientVersion,functionId,t&h5st=20210803004601741%3B9832466289341162%3B10005%3Btk01wb2581ba2a8ndXcyN0dBc2lmOdBKB2j6AmZhqiMBL1xbV3unOkVbDl2xKYdsB%2ByLyUDNYeOBhsA4b316%2B1cdS2VW%3Bc7520ffaa8ad8d7cdb6b593d33aa37079c3d6a678a12ad5fb40aa1cde0787363`,
       headers: {
         "Origin": "https://pushgold.jd.com",
         "Host": "api.m.jd.com",
@@ -231,7 +231,7 @@ function getCoinDozerInfo() {
   return new Promise(async (resolve) => {
     let options = {
       url: `https://api.m.jd.com/?t=1623066557140`,
-      body: `functionId=getCoinDozerInfo&body={"actId":"287eb90945e049129d76dd7e85dc0313","channel":"coin_dozer","antiToken":"","referer":"-1","frontendInitStatus":""}&appid=megatron&client=android&clientVersion=9&t=1626269713293&networkType=4g&eid=&fp=&frontendInitStatus=&uuid=8363532363230343238303836333-43D2468336563316936636265356&osVersion=9&d_brand=&d_model=&agent=-1&pageClickKey=-1&screen=393*818&platform=3&lang=zh_CN&eu=8363532363230343238303836333&fv=43D2468336563316936636265356`,
+      body: `functionId=getCoinDozerInfo&body={"actId":"d5a8c7198ee54de093d2adb04089d3ec","channel":"coin_dozer","antiToken":"","referer":"-1","frontendInitStatus":""}&appid=megatron&client=android&clientVersion=9&t=1626269713293&networkType=4g&eid=&fp=&frontendInitStatus=&uuid=8363532363230343238303836333-43D2468336563316936636265356&osVersion=9&d_brand=&d_model=&agent=-1&pageClickKey=-1&screen=393*818&platform=3&lang=zh_CN&eu=8363532363230343238303836333&fv=43D2468336563316936636265356`,
       headers: {
         "Origin": "https://pushgold.jd.com",
         "Host": "api.m.jd.com",
@@ -263,7 +263,29 @@ function getCoinDozerInfo() {
   });
 }
 
-var _0xodk='jsjiami.com.v6',_0x3029=[_0xodk,'wqceN8OfwoQ=','M8KyJhkA','wrDCjMO0I8OT','BSzDqULDpsO+','FxQtIUI=','wqPDkXLDjMKi','wpsDw6FZHA==','w5Zqwoksw4XDrcO3w6jCm0nCscK0ZRgYCyLDgSdew63Dr8OWBsKEwovDu8ODZUohD8Okw6DDgUQCwq55wrIvH2N9wovDjQICw7caw7XDugwQwq9kVsKnET7Ds1c3QcKbwoIgAMKOGcKuD8KmwrLCmsOFw7PDlFnDkA==','ZVbDqQ==','dMK2wojDsQw=','Nn7Dmigq','AsKJNQ==','LcK+LR0iw4jDnVPDiw==','USDCi8Kz','w43DlcK+wq7or6Xms7Dlp5DotpHvvaPoroDmoafmn5vnvITotJzphaXorrs=','wojDjkXDgsK/wrVtw5HCs1Y=','TyDClMKlwpw=','GGlowqkW','wpE3F8ORwrU=','w7d5wp3DiMKk','bhDDqw==','wqPCszfCpUvCi2pAwpA=','woELUg==','wqV0wrTDtuisquaxg+Wnp+i2kO+8teivhuahg+adhee8v+i3temEn+iskQ==','w7l3QyBV','wptITMOVw7jCrQwKw5DCkg==','w7wqwq8=','w44DwpDCgcK/w7Yhw4pc','BcOYLQ==','J8OUABxq','OsKCBhoI','wrTCr8OkNcOD','wogICcOYwqDDgQxQDsOm','asOowq7DiMOa','bhDDq8KfS8OQ','YDjHsUGNNjkiJSamil.coAm.gXQv6=='];(function(_0x348d6a,_0x56839d,_0x4fd0bb){var _0x2073cf=function(_0x3ce80a,_0xddb59f,_0x3dd6b9,_0x36dbc8,_0x62a285){_0xddb59f=_0xddb59f>>0x8,_0x62a285='po';var _0x16a5a0='shift',_0x6d7ffc='push';if(_0xddb59f<_0x3ce80a){while(--_0x3ce80a){_0x36dbc8=_0x348d6a[_0x16a5a0]();if(_0xddb59f===_0x3ce80a){_0xddb59f=_0x36dbc8;_0x3dd6b9=_0x348d6a[_0x62a285+'p']();}else if(_0xddb59f&&_0x3dd6b9['replace'](/[YDHUGNNkJSlAgXQ=]/g,'')===_0xddb59f){_0x348d6a[_0x6d7ffc](_0x36dbc8);}}_0x348d6a[_0x6d7ffc](_0x348d6a[_0x16a5a0]());}return 0x9f926;};return _0x2073cf(++_0x56839d,_0x4fd0bb)>>_0x56839d^_0x4fd0bb;}(_0x3029,0x1a8,0x1a800));var _0x2bea=function(_0x516d65,_0x59cc06){_0x516d65=~~'0x'['concat'](_0x516d65);var _0x42ade7=_0x3029[_0x516d65];if(_0x2bea['kYDJfl']===undefined){(function(){var _0x4bfbfe=typeof window!=='undefined'?window:typeof process==='object'&&typeof require==='function'&&typeof global==='object'?global:this;var _0x2bf99b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';_0x4bfbfe['atob']||(_0x4bfbfe['atob']=function(_0x3b7aad){var _0x28733c=String(_0x3b7aad)['replace'](/=+$/,'');for(var _0x5b1bfd=0x0,_0x22003b,_0x447fb4,_0x570226=0x0,_0x169565='';_0x447fb4=_0x28733c['charAt'](_0x570226++);~_0x447fb4&&(_0x22003b=_0x5b1bfd%0x4?_0x22003b*0x40+_0x447fb4:_0x447fb4,_0x5b1bfd++%0x4)?_0x169565+=String['fromCharCode'](0xff&_0x22003b>>(-0x2*_0x5b1bfd&0x6)):0x0){_0x447fb4=_0x2bf99b['indexOf'](_0x447fb4);}return _0x169565;});}());var _0x31567b=function(_0x51aa00,_0x59cc06){var _0x2936e7=[],_0x2afa91=0x0,_0x27405a,_0x305d85='',_0x864539='';_0x51aa00=atob(_0x51aa00);for(var _0x52b5fb=0x0,_0x2c547f=_0x51aa00['length'];_0x52b5fb<_0x2c547f;_0x52b5fb++){_0x864539+='%'+('00'+_0x51aa00['charCodeAt'](_0x52b5fb)['toString'](0x10))['slice'](-0x2);}_0x51aa00=decodeURIComponent(_0x864539);for(var _0x7b18a4=0x0;_0x7b18a4<0x100;_0x7b18a4++){_0x2936e7[_0x7b18a4]=_0x7b18a4;}for(_0x7b18a4=0x0;_0x7b18a4<0x100;_0x7b18a4++){_0x2afa91=(_0x2afa91+_0x2936e7[_0x7b18a4]+_0x59cc06['charCodeAt'](_0x7b18a4%_0x59cc06['length']))%0x100;_0x27405a=_0x2936e7[_0x7b18a4];_0x2936e7[_0x7b18a4]=_0x2936e7[_0x2afa91];_0x2936e7[_0x2afa91]=_0x27405a;}_0x7b18a4=0x0;_0x2afa91=0x0;for(var _0x33a70c=0x0;_0x33a70c<_0x51aa00['length'];_0x33a70c++){_0x7b18a4=(_0x7b18a4+0x1)%0x100;_0x2afa91=(_0x2afa91+_0x2936e7[_0x7b18a4])%0x100;_0x27405a=_0x2936e7[_0x7b18a4];_0x2936e7[_0x7b18a4]=_0x2936e7[_0x2afa91];_0x2936e7[_0x2afa91]=_0x27405a;_0x305d85+=String['fromCharCode'](_0x51aa00['charCodeAt'](_0x33a70c)^_0x2936e7[(_0x2936e7[_0x7b18a4]+_0x2936e7[_0x2afa91])%0x100]);}return _0x305d85;};_0x2bea['UTUcgy']=_0x31567b;_0x2bea['dSzFle']={};_0x2bea['kYDJfl']=!![];}var _0x3137c8=_0x2bea['dSzFle'][_0x516d65];if(_0x3137c8===undefined){if(_0x2bea['hRUmoW']===undefined){_0x2bea['hRUmoW']=!![];}_0x42ade7=_0x2bea['UTUcgy'](_0x42ade7,_0x59cc06);_0x2bea['dSzFle'][_0x516d65]=_0x42ade7;}else{_0x42ade7=_0x3137c8;}return _0x42ade7;};function getAuthorShareCode(){var _0x3a49b8={'uIQsu':'yXWKo','Ltczv':function(_0x1eb8c3,_0x36b989){return _0x1eb8c3!==_0x36b989;},'xJjaz':_0x2bea('0','aBHv'),'rLywy':'oLlVl','NcJoK':function(_0x59d846,_0x19af14){return _0x59d846===_0x19af14;},'GLnkU':'drqzq','dHYnD':_0x2bea('1','0U[S'),'gyjpT':_0x2bea('2','UO5Z'),'cZzfD':function(_0x14b8b1){return _0x14b8b1();},'arahU':_0x2bea('3','j2hV')};return new Promise(_0xcd0908=>{$[_0x2bea('4','fT]G')]({'url':_0x3a49b8['arahU'],'headers':{'User-Agent':'Mozilla/5.0\x20(iPhone;\x20CPU\x20iPhone\x20OS\x2013_2_3\x20like\x20Mac\x20OS\x20X)\x20AppleWebKit/605.1.15\x20(KHTML,\x20like\x20Gecko)\x20Version/13.0.3\x20Mobile/15E148\x20Safari/604.1\x20Edg/87.0.4280.88'}},async(_0x23ebb9,_0x595a04,_0x12f5e5)=>{if(_0x3a49b8[_0x2bea('5','6b%]')]!==_0x2bea('6','NQAt')){if(_0x23ebb9){console[_0x2bea('7','32BM')](''+JSON[_0x2bea('8','Eg1O')](_0x23ebb9));console['log']($[_0x2bea('9','dnsr')]+_0x2bea('a','z0Ih'));}else{$[_0x2bea('b','0U[S')]=JSON[_0x2bea('c','dnsr')](_0x12f5e5);}}else{try{if(_0x3a49b8[_0x2bea('d','ZM]P')](_0x3a49b8[_0x2bea('e','[VTs')],_0x3a49b8[_0x2bea('f','$j6n')])){if(_0x23ebb9){console[_0x2bea('10','ZpC]')](''+JSON[_0x2bea('11','fSX&')](_0x23ebb9));console[_0x2bea('12','iB3c')]($['name']+_0x2bea('13','$j6n'));}else{if(_0x3a49b8['NcJoK'](_0x3a49b8['GLnkU'],_0x2bea('14','d%zc'))){$[_0x2bea('15','7rEr')]=JSON['parse'](_0x12f5e5);}else{_0xcd0908();}}}else{console[_0x2bea('16','*]xm')](''+JSON[_0x2bea('17','b8no')](_0x23ebb9));console[_0x2bea('18','aAg)')]($['name']+'\x20API请求失败，请检查网路重试');}}catch(_0x281131){if(_0x3a49b8[_0x2bea('19','aAg)')](_0x3a49b8[_0x2bea('1a','Eg1O')],_0x3a49b8[_0x2bea('1b','7psH')])){$[_0x2bea('1c','[VTs')]=JSON[_0x2bea('1d','g9ch')](_0x12f5e5);}else{$[_0x2bea('1e','ZpC]')](_0x281131,_0x595a04);}}finally{if(_0x3a49b8[_0x2bea('1f','[VTs')](_0x2bea('20','Eg1O'),'mxymL')){_0x3a49b8[_0x2bea('21','7psH')](_0xcd0908);}else{$[_0x2bea('22','#kh3')](e,_0x595a04);}}}});});};_0xodk='jsjiami.com.v6';
+function getAuthorShareCode() {
+  return new Promise(resolve => {
+      $.get({
+          url: "https://xr2021.coding.net/p/import-kasd/d/JDbot/git/raw/master/shareCodes/tyt.json",
+          headers: {
+              "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+          }
+      }, async (err, resp, data) => {
+          try {
+              if (err) {
+                  console.log(`${JSON.stringify(err)}`);
+                  console.log(`${$.name} API请求失败，请检查网路重试`);
+              } else {
+                  $.authorCode = JSON.parse(data);
+              }
+          } catch (e) {
+              $.logErr(e, resp)
+          } finally {
+              resolve();
+          }
+      })
+  })
+}
 
 async function taskPostUrl(functionId, body) {
   return {
