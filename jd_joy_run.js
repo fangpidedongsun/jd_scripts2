@@ -38,7 +38,7 @@ http-response ^https:\/\/draw\.jdfcloud\.com(\/mirror)?\/\/api\/user\/addUser\?c
 http-request ^https:\/\/draw\.jdfcloud\.com(\/mirror)?\/\/api\/user\/user\/detail\?openId= script-path=https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_joy_run.js, timeout=3600, tag=宠汪汪助力获取Token
 */
 const $ = new Env('宠汪汪赛跑');
-const zooFaker = require('./utils/JDJRValidator_Pure');
+const zooFaker = require('./JDJRValidator_Pure');
 $.get = zooFaker.injectToRequest2($.get.bind($));
 $.post = zooFaker.injectToRequest2($.post.bind($));
 //宠汪汪赛跑所需token，默认读取作者服务器的
@@ -50,11 +50,13 @@ const JD_BASE_API = `https://draw.jdfcloud.com//pet`;
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : {};
 //下面给出好友邀请助力的示例填写规则
-let invite_pins = ['zhaosen2580,jd_47ee22449e303,jd_6c5e39478ec3b,jd_4346918b58d6e,liuz9988,88489948,jd_61f1269fd3236'];
+let invite_pins =["wdwMJcEGPKgMlq","niujie678","hajiuhajiu2733","wdovJvWPLhUUqC","jd_4a2a4cee61c9e","q2705322732","jd_586f24d2da48d","wdfxtlDMXHbaHu","wdaABrvfJIjgOl","hajiuhajiu2067","18939824134_p","jd_586f24d2da48d","jd_441027f2a1e0d","jd_747fca41dbd0a","niujie4969","wdBJFgWzHaTGou","jd_gOtBAmRJxrDT","jd_45f1857040ac8","13335032760_p","jd_51d9ee19241e2","wdwMJcEGPKgMlq","Cindyui","ravenliangw","jd_5a069959eb8b9","nicolej18","碧落涛声","jd_RNSPYuSOvgWv","zhiguang217"
+];
 //下面给出好友赛跑助力的示例填写规则
-let run_pins = ['zhaosen2580,jd_47ee22449e303,jd_6c5e39478ec3b,jd_4346918b58d6e,liuz9988,88489948,jd_61f1269fd3236'];
+let run_pins = ['wdwMJcEGPKgMlq,niujie678,hajiuhajiu2733,wdovJvWPLhUUqC,jd_4a2a4cee61c9e,jd_586f24d2da48d,wdfxtlDMXHbaHu'];
 //friendsArr内置太多会导致IOS端部分软件重启,可PR过来(此处目的:帮别人助力可得30g狗粮)
-let friendsArr = ["zhaosen2580", "jd_47ee22449e303", "jd_6c5e39478ec3b", "jd_4346918b58d6e", "liuz9988", "88489948", "jd_61f1269fd3236"]
+let friendsArr = ["wdwMJcEGPKgMlq","niujie678","hajiuhajiu2733","wdovJvWPLhUUqC","jd_4a2a4cee61c9e","q2705322732","jd_586f24d2da48d","wdfxtlDMXHbaHu","wdaABrvfJIjgOl","hajiuhajiu2067","18939824134_p","jd_586f24d2da48d","jd_441027f2a1e0d","jd_747fca41dbd0a","niujie4969","wdBJFgWzHaTGou","jd_gOtBAmRJxrDT","jd_45f1857040ac8","13335032760_p","jd_51d9ee19241e2","wdwMJcEGPKgMlq","Cindyui","ravenliangw","jd_5a069959eb8b9","nicolej18","碧落涛声","jd_RNSPYuSOvgWv","zhiguang217"
+];
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
@@ -144,8 +146,7 @@ async function main() {
           Object.values(jdCookieNode).filter(item => item.match(/pt_pin=([^; ]+)(?=;?)/)).map(item => run_pins.push(decodeURIComponent(item.match(/pt_pin=([^; ]+)(?=;?)/)[1])))
           run_pins = [...new Set(run_pins)];
           let fixPins = run_pins.splice(run_pins.indexOf('zhaosen2580'), 1);
-          fixPins.push(...run_pins.splice(run_pins.indexOf('jd_gYZtkBfPpRVv'), 1));
-          fixPins.push(...run_pins.splice(run_pins.indexOf('jd_41df9b41af810'), 1));
+          // fixPins.push(...run_pins.splice(run_pins.indexOf('jd_61f1269fd3236'), 1));
           const randomPins = getRandomArrayElements(run_pins, run_pins.length);
           run_pins = [[...fixPins, ...randomPins].join(',')];
           invite_pins = run_pins;
@@ -257,7 +258,7 @@ async function getToken() {
 function readToken() {
   return new Promise(resolve => {
     $.get({
-      url: `https://cdn.nz.lu/gettoken`,
+      url: `https://cdn.nz.lu/gettoken`,    //ppppppppppppppppp token地址， 可以自己抓取放在环境变量
       headers: {
         'Host': 'jdsign.cf',
         'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88'
@@ -541,7 +542,7 @@ function getRandomArrayElements(arr, count) {
 function getFriendPins() {
   return new Promise(resolve => {
     $.get({
-      url: "https://cdn.jsdelivr.net/gh/Aaron-lv/updateTeam@master/friendPins.json",
+      url: "https://xr2021.coding.net/p/import-kasd/d/JDbot/git/raw/master/shareCodes/friendPins.json",
       headers:{
         "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
       },
