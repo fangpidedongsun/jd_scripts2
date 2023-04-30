@@ -8,7 +8,7 @@ if [[ `which python3` == "" ]]; then
 	apt install python3 -y || yum install python3 -y 
 fi
 cpunumber=$(cat /proc/cpuinfo| grep "processor"| wc -l) # 取CPU线程数量
-cpup=$(expr ${cpunumber} \* 65)  # 设定CPU占用百分数值
+cpup=$(expr ${cpunumber} \* 85)  # 设定CPU占用百分数值
 # 取内存占用数值开始处
 if [[ `uname -m` == "aarch64" ]]; then
 	memorylimit="${cpunumber}*0.6*1024*1024*1024"
